@@ -102,8 +102,10 @@ func (r *repository) SoftDelete(ctx context.Context, m *Model) error {
 
 ## 6. Filter with Pagination
 
+Separate `Count` and `Find` into different methods — shared `buildFilterQuery` avoids duplication:
+
 ```go
-func (r *repository) Filter(ctx context.Context, req *FilterRequest) ([]Model, *PaginationResponse, error) {
+func (r *repository) buildFilterQuery(req *FilterRequest) *bun.SelectQuery {
     query := r.db.NewSelect().Model(&models).
         Where("deleted_at = 0")
 
@@ -111,14 +113,22 @@ func (r *repository) Filter(ctx context.Context, req *FilterRequest) ([]Model, *
         query = query.Where("name ILIKE ?", "%"+req.Search+"%")
     }
 
-    total, _ := query.Count(ctx)
+    return query
+}
 
-    query = query.Order("created_at DESC").
+func (r *repository) CountByFilter(ctx context.Context, req *FilterRequest) (int, error) {
+    return r.buildFilterQuery(req).Count(ctx)
+}
+
+func (r *repository) FindByFilter(ctx context.Context, req *FilterRequest) ([]Model, error) {
+    query := r.buildFilterQuery(req)
+
+    err := query.Order("created_at DESC").
         Limit(req.PageSize).
-        Offset((req.Page - 1) * req.PageSize)
+        Offset((req.Page - 1) * req.PageSize).
+        Scan(ctx, &models)
 
-    err := query.Scan(ctx, &models)
-    return models, CalculatePagination(total, req), err
+    return models, err
 }
 ```
 

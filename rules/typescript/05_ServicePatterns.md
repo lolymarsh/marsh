@@ -9,7 +9,7 @@ trigger: always_on
 ```typescript
 export interface IUserService {
   Login(input: LoginInput): Promise<{ token: string; user: UserResponse }>;
-  FindFiltered(input: FilterRequestInput, adminId: string, meta?: AuditMeta): Promise<FilteredResult<UserResponse>>;
+  FindByFilter(input: FilterRequestInput, adminId: string, meta?: AuditMeta): Promise<FilteredResult<UserResponse>>;
   Update(id: string, input: UpdateInput, adminId: string, meta?: AuditMeta): Promise<UserResponse>;
 }
 
@@ -25,7 +25,7 @@ export class UserService implements IUserService {
 ## 2. CRUD Pattern
 
 ```typescript
-async FindFiltered(
+async FindByFilter(
   input: FilterRequestInput,
   adminId: string,
   meta?: AuditMeta,
@@ -33,7 +33,10 @@ async FindFiltered(
   // Guard: access check
   // ...
 
-  const { data, total } = await this.repo.FindFiltered(input);
+  const [data, total] = await Promise.all([
+    this.repo.FindByFilter(input),
+    this.repo.CountByFilter(input),
+  ]);
   return {
     data: data.map((e) => this.toResponse(e)),
     pagination: calculatePagination(input.page, input.pageSize, total),

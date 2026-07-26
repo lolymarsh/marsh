@@ -83,16 +83,27 @@ async def CreateInvoice(
 
 ## 4. Filter/Pagination Pattern
 
+Separate `CountByFilter` and `FindByFilter` — service layer combines them only when pagination is needed:
+
 ```python
+import asyncio
+import math
+
 async def FilterUsers(
     self,
     input: FilterInput,
 ) -> tuple[list[UserResponse], Pagination]:
-    data, total = await self._repo.FindFiltered(
-        search=input.search,
-        role=input.role,
-        page=input.page,
-        page_size=input.page_size,
+    data, total = await asyncio.gather(
+        self._repo.FindByFilter(
+            search=input.search,
+            role=input.role,
+            page=input.page,
+            page_size=input.page_size,
+        ),
+        self._repo.CountByFilter(
+            search=input.search,
+            role=input.role,
+        ),
     )
     pagination = Pagination(
         page=input.page,

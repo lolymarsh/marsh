@@ -50,29 +50,42 @@ class UserRepository:
         result = await self._db.execute(stmt)
         return result.rowcount > 0
 
-    async def FindFiltered(
+    # --- Filter (separate count from data) ---
+
+    async CountByFilter(
+        self,
+        search: str | None = None,
+        role: str | None = None,
+    ) -> int:
+        stmt = select(func.count()).select_from(
+            self._buildFilterQuery(search, role).subquery()
+        )
+        total = await self._db.scalar(stmt)
+        return total or 0
+
+    async FindByFilter(
         self,
         search: str | None = None,
         role: str | None = None,
         page: int = 1,
         page_size: int = 20,
-    ) -> tuple[list[UserEntity], int]:
-        stmt = select(UserEntity).where(UserEntity.deleted_at.is_(None))
+    ) -> list[UserEntity]:
+        stmt = (
+            self._buildFilterQuery(search, role)
+            .order_by(UserEntity.created_at.desc())
+            .limit(page_size)
+            .offset((page - 1) * page_size)
+        )
+        result = await self._db.execute(stmt)
+        return result.scalars().all()
 
+    def _buildFilterQuery(self, search: str | None = None, role: str | None = None):
+        stmt = select(UserEntity).where(UserEntity.deleted_at.is_(None))
         if search:
             stmt = stmt.where(UserEntity.display_name.ilike(f"%{search}%"))
         if role:
             stmt = stmt.where(UserEntity.role == role)
-
-        count_stmt = select(func.count()).select_from(stmt.subquery())
-        total = await self._db.scalar(count_stmt)
-
-        result = await self._db.execute(
-            stmt.order_by(UserEntity.created_at.desc())
-            .limit(page_size)
-            .offset((page - 1) * page_size)
-        )
-        return result.scalars().all(), total or 0
+        return stmt
 ```
 
 ## 2. Rules

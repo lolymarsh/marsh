@@ -77,13 +77,34 @@ func (s *service) CreateOrder(ctx context.Context, req *CreateOrderRequest) erro
 
 ## 4. Filter/Pagination Pattern
 
+Separate `CountByFilter` and `FindByFilter` — run in parallel with `errgroup`:
+
 ```go
+import "golang.org/x/sync/errgroup"
+
 func (s *service) FilterUsers(ctx context.Context, req *request.FilterRequest) ([]*UserResponse, *response.PaginationResponse, error) {
-    users, pagination, err := s.repo.FilterUsers(ctx, req)
-    if err != nil {
+    g, ctx := errgroup.WithContext(ctx)
+
+    var total int
+    var users []Model
+
+    g.Go(func() error {
+        var err error
+        total, err = s.repo.CountUsersByFilter(ctx, req)
+        return err
+    })
+
+    g.Go(func() error {
+        var err error
+        users, err = s.repo.FindUsersByFilter(ctx, req)
+        return err
+    })
+
+    if err := g.Wait(); err != nil {
         return nil, nil, apperrors.Internal("failed to filter users", err)
     }
-    return mapToResponses(users), pagination, nil
+
+    return mapToResponses(users), response.CalculatePagination(total, req), nil
 }
 ```
 

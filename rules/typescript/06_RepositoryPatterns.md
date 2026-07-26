@@ -10,7 +10,8 @@ trigger: always_on
 export interface IUserRepository {
   FindById(id: string): Promise<UserEntity | null>;
   FindByUsername(username: string): Promise<UserEntity | null>;
-  FindFiltered(input: FilterRequestInput): Promise<{ data: UserEntity[]; total: number }>;
+  CountByFilter(input: FilterRequestInput): Promise<number>;
+  FindByFilter(input: FilterRequestInput): Promise<UserEntity[]>;
   Create(data: Partial<UserEntity>): Promise<UserEntity>;
   Update(id: string, data: Partial<UserEntity>, version: number): Promise<UserEntity | null>;
   SoftDelete(id: string, version: number): Promise<boolean>;
@@ -67,10 +68,29 @@ async SoftDelete(id: string, version: number): Promise<boolean> {
 }
 ```
 
-**Filter with pagination:**
+**Filter with pagination — separate count and find:**
+
 ```typescript
-async FindFiltered(input: FilterRequestInput): Promise<{ data: UserEntity[]; total: number }> {
-  let conditions = [eq(users.deletedAt, null)];
+async CountByFilter(input: FilterRequestInput): Promise<number> {
+  const conditions = this._buildConditions(input);
+
+  const [{ count }] = await this.db.select({ count: count() })
+    .from(users).where(and(...conditions));
+
+  return count;
+}
+
+async FindByFilter(input: FilterRequestInput): Promise<UserEntity[]> {
+  const conditions = this._buildConditions(input);
+
+  return this.db.select().from(users)
+    .where(and(...conditions))
+    .limit(input.pageSize)
+    .offset((input.page - 1) * input.pageSize);
+}
+
+private _buildConditions(input: FilterRequestInput): SQL[] {
+  const conditions = [eq(users.deletedAt, null)];
 
   if (input.search) {
     conditions.push(sql`CONCAT(first_name, ' ', last_name) LIKE ${`%${input.search}%`}`);
@@ -79,15 +99,7 @@ async FindFiltered(input: FilterRequestInput): Promise<{ data: UserEntity[]; tot
     conditions.push(eq(users.role, input.role));
   }
 
-  const data = await this.db.select().from(users)
-    .where(and(...conditions))
-    .limit(input.pageSize)
-    .offset((input.page - 1) * input.pageSize);
-
-  const [{ count }] = await this.db.select({ count: count() })
-    .from(users).where(and(...conditions));
-
-  return { data, total: count };
+  return conditions;
 }
 ```
 
