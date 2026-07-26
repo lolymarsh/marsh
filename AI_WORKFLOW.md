@@ -93,7 +93,7 @@ AI: เขียน customer module
 ### 4. Prompt Template สำหรับ Implement
 
 ```
-implement phase 02 ตาม spec/phase/02_CUSTOMERS.md
+implement phase 02 ตาม spec/2026-07-18_core/02_CUSTOMERS.md
 ตาม AGENTS.md rules + ARCHITECTURE.md patterns
 
 สิ่งที่ต้องการ:
@@ -178,12 +178,12 @@ Outcome:
 ### Step 6: Start Implementing (Phase-based)
 
 ```
-prompt: "implement phase 01 ตาม spec/phase/01_FOUNDATION.md"
+prompt: "implement phase 01 ตาม spec/2026-07-18_core/01_FOUNDATION.md"
 ```
 
-AI จะอ่าน `spec/phase/01_FOUNDATION.md` → รู้ว่าต้องทำอะไรบ้าง → implement ทีละ task
+AI จะอ่าน `spec/2026-07-18_core/01_FOUNDATION.md` → รู้ว่าต้องทำอะไรบ้าง → implement ทีละ task
 
-**Phase-by-Phase Approach**:
+**Phase-by-Phase (Core Track)**:
 ```
 01_FOUNDATION.md  → project setup, docker, auth, DB schema
 02_CUSTOMERS.md   → customer CRUD (backend + frontend)
@@ -196,6 +196,33 @@ AI จะอ่าน `spec/phase/01_FOUNDATION.md` → รู้ว่าต้
 ```
 
 ---
+
+## Spec Convention — Multi-Track Projects
+
+เมื่อโปรเจกต์มีหลาย tasks ไม่ใช่แค่ core:
+
+```
+spec/
+├── plan.md              ← Master plan (ภาพรวม)
+├── ARCHITECTURE.md
+├── 2026-07-18_core/     ← ⭐ Core track (sort by date!)
+│   ├── 01_FOUNDATION.md
+│   └── ...
+│
+└── 2026-08-01_expense/  ← Next track
+    ├── plan.md
+    └── phases/
+
+**Rule**: Core track = stable baseline — ทำครบก่อน แล้วค่อยเพิ่ม track ใหม่
+
+**ตัวอย่าง**: ถ้าจะเพิ่ม module "expense tracking" หลัง core เสร็จ:
+```
+spec/2026-08-01_expense/
+├── plan.md          ← "เพิ่มโมดูลบันทึกรายจ่าย: backend expense module + frontend form"
+└── phases/
+    ├── 01_EXPENSE_MODEL.md
+    └── 02_EXPENSE_UI.md
+```
 
 ## คำแนะนำเพิ่มเติม
 
@@ -241,7 +268,7 @@ AI จะอ่าน `spec/phase/01_FOUNDATION.md` → รู้ว่าต้
 ❌ "เขียนระบบ erp ให้หน่อย"                      — กว้างเกิน AI จะมั่ว
 ❌ "ใส่ฟีเจอร์ xx ด้วย"                           — ไม่มี spec = implement ไม่ตรง
 ❌ "แก้บัคตรงนี้" (ไม่มี context)                  — AI เดา
-✅ "implement phase 02 ตาม spec/phase/02_CUSTOMERS.md" — ชัดเจน มี spec + acceptance criteria
+✅ "implement phase 02 ตาม spec/2026-07-18_core/02_CUSTOMERS.md" — ชัดเจน มี spec + acceptance criteria
 ✅ "fix pagination ใน customer handler ตาม ARCHITECTURE.md section 9.1" — ชี้เป๊ะ
 ✅ "add test for phase 04 invoice transaction ตาม rules/RepositoryPatterns.md" — มีตัวอย่าง
 ```
@@ -262,7 +289,7 @@ AI จะแก้ตาม rule — นี่คือข้อดีของ�
 
 ```
 Step 1: idea → plan.md              (AI เขียน, คุณรีวิว)
-Step 2: plan → spec/phase/*.md       (AI แยก phase, คุณ check priority/deps)
+Step 2: plan → spec/2026-07-18_core/*.md (AI แยก phase, คุณ check priority/deps)
 Step 3: plan+phase → ARCHITECTURE.md (AI เขียน, คุณเพิ่ม pattern)
 Step 4: rules → AGENTS.md + .agent/rules/ + .claude/rules/ (AI สร้าง, single source of truth)
 Step 5: phase 01 → code              (AI implement ทีละ phase ตาม spec)
