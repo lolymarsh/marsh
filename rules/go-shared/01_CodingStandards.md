@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Go Coding Standards
+# Go Coding Standards (Shared)
 
 ## 1. General
 
@@ -40,7 +40,7 @@ type repository struct { db *bun.DB }
 func NewRepository(db *bun.DB) Repository { return &repository{db: db} }
 ```
 
-## 5. Error Handling
+## 5. Error Handling Rules
 
 - **Service layer**: Use `pkg/apperrors` exclusively in public methods
 - **Repo layer**: `fmt.Errorf("...: %w", err)` + sentinel errors (`var ErrNotFound = errors.New("...")`)
@@ -64,13 +64,16 @@ All public methods take `ctx context.Context` as first argument.
 svcLogger := logger.With(zap.String("layer", "user.service"))
 ```
 
-## 9. Architecture Rules
+## 9. Naming Conventions
 
-```
-Handler → Service → Repository → DB
-        → Service → Service (cross-module via interface)
-```
-
-- Handler depends on Service interface (never concrete type)
-- Service depends on Repository interface (never concrete type)
-- Cross-module calls happen at Service layer, injected via constructor
+| Item | Convention | Example |
+|---|---|---|
+| Files | `snake_case.go` | `user_handler.go` |
+| Packages | lowercase | `auditlog`, `authz` |
+| Structs | PascalCase | `UserModel` |
+| Interfaces | PascalCase | `Service`, `Repository` |
+| Exported funcs | PascalCase | `GetProfile` |
+| Private funcs | camelCase | `validateInput` |
+| Constants | PascalCase | `RoleAdmin` |
+| Variables | short camelCase | `req`, `ctx`, `svc` |
+| DB columns | snake_case | `user_id` |

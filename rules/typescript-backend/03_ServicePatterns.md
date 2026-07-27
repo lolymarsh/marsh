@@ -90,7 +90,16 @@ async CreateInvoice(input: CreateInvoiceInput, userId: string): Promise<InvoiceR
 }
 ```
 
-## 4. Rules
+## 4. Per-Layer Error Rules
+
+| Layer | Error Type |
+|---|---|
+| **Handler** | Catch errors → `SendError(res, status, message)` |
+| **Service** | Throw `AppError` subclass |
+| **Repository** | Return `null` (not throw) |
+| **Transaction** | Throw `AppError` subclass (auto-rollback) |
+
+## 5. Rules
 
 - Interface prefix `I`: `I{Name}Service`
 - Guard clauses first: existence → auth → mutate

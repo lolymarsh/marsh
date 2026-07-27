@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Database Patterns
+# Database Patterns (Backend)
 
 ## 1. ORM: Drizzle ORM (MySQL)
 
@@ -88,23 +88,4 @@ audit_logs: {
   createdAt: Date,
 }
 // Indexes: (tableName+recordId+createdAt), (userId+createdAt)
-```
-
-## 7. MongoDB Repository
-
-```typescript
-export class AuditLogRepository {
-  constructor(private mongo: MongoClient) {}
-
-  async Insert(doc: AuditLogDoc): Promise<void> {
-    await this.mongo.db().collection('audit_logs').insertOne(doc);
-  }
-
-  async FindByRecord(tableName: string, recordId: string): Promise<AuditLogDoc[]> {
-    return this.mongo.db().collection('audit_logs')
-      .find({ tableName, recordId })
-      .sort({ createdAt: -1 })
-      .toArray();
-  }
-}
 ```

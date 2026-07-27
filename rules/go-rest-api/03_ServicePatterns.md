@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Service Layer Patterns
+# Go Service Layer Patterns (REST API)
 
 ## 1. Interface + Implementation
 

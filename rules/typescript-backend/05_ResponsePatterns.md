@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Response Patterns
+# Response Patterns (Backend)
 
 ## 1. Success Response
 
@@ -50,18 +50,7 @@ trigger: always_on
 }
 ```
 
-## 5. HTTP Status Mapping
-
-| Error Class | HTTP Status |
-|---|---|
-| `NotFoundError` | 404 |
-| `BadRequestError` | 400 |
-| `UnauthorizedError` | 401 |
-| `ForbiddenError` | 403 |
-| `ConflictError` | 409 |
-| `AppError` (generic) | 500 |
-
-## 6. Response Helpers
+## 5. Response Helpers
 
 ```typescript
 // Success

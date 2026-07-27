@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Project Structure
+# Go REST API Project Structure
 
 ## 1. Directory Layout
 
@@ -72,23 +72,7 @@ Every business module follows identical layout:
 
 ---
 
-## 3. Naming Conventions
-
-| Item | Convention | Example |
-|---|---|---|
-| Files | `snake_case.go` | `user_handler.go` |
-| Packages | lowercase | `auditlog`, `authz` |
-| Structs | PascalCase | `UserModel` |
-| Interfaces | PascalCase | `Service`, `Repository` |
-| Exported funcs | PascalCase | `GetProfile` |
-| Private funcs | camelCase | `validateInput` |
-| Constants | PascalCase | `RoleAdmin` |
-| Variables | short camelCase | `req`, `ctx`, `svc` |
-| DB columns | snake_case | `user_id` |
-
----
-
-## 4. Constants Organization
+## 3. Constants Organization
 
 ```
 pkg/constants/
@@ -100,10 +84,21 @@ pkg/constants/
 
 ---
 
-## 5. Layer Responsibilities
+## 4. Layer Responsibilities
 
 | Layer | Responsibility |
 |---|---|
 | **Handler** | Bind request, validate, extract user context, call service, return response |
 | **Service** | Business logic, authorization checks, call repository, audit logging |
 | **Repository** | Database operations (bun), soft-delete filter, optimistic locking |
+
+## 5. Architecture Rules
+
+```
+Handler → Service → Repository → DB
+        → Service → Service (cross-module via interface)
+```
+
+- Handler depends on Service interface (never concrete type)
+- Service depends on Repository interface (never concrete type)
+- Cross-module calls happen at Service layer, injected via constructor

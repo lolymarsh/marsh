@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Security Practices
+# Security Practices (Backend)
 
 ## 1. Authentication
 
@@ -50,15 +50,23 @@ const input = req.body as LoginInput;       // ❌ no validation
 - Drizzle ORM parameterized queries (no raw SQL string concatenation)
 - If raw SQL needed: use `sql\`...\`` template literals (Drizzle-safe)
 
-## 7. API Security
+## 7. Backend API Security
 
 - Request timeout (Axios: 30s, Express: configurable)
-- Rate limiting at reverse proxy (Nginx)
-- CORS restricted to known origins
+- Rate limiting at reverse proxy level (Nginx/Traefik) — see devops rules
+- CORS handled at reverse proxy level — see devops rules
 - No sensitive data in logs (passwords, tokens)
 
-## 8. Frontend Security
+## 8. Audit Logging
 
-- Axios interceptor: 401 → clear storage → redirect to `/login`
-- Tokens stored in `localStorage` (no httpOnly cookies for SPA)
-- API base URL via Vite proxy (no direct API exposure)
+Audit failures are fire-and-forget (never fail the main operation):
+
+```typescript
+setImmediate(async () => {
+  try {
+    await this.repo.Insert(doc);
+  } catch (err: unknown) {
+    logger.error({ err }, 'Failed to insert audit log');
+  }
+});
+```

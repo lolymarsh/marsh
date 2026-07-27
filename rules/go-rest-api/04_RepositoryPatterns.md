@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Repository Layer Patterns
+# Go Repository Layer Patterns (REST API)
 
 ## 1. Interface + Implementation
 

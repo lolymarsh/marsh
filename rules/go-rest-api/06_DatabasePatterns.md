@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Database Patterns
+# Go Database Patterns (REST API)
 
 ## 1. ORM: Uptrace Bun
 

@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Handler Layer Patterns
+# Go Handler Layer Patterns (REST API)
 
 ## 1. Handler Struct + Constructor
 
@@ -87,4 +87,22 @@ func RegisterRoutes(app *echo.Echo, h *Handler, mid *middleware.Middleware) {
 // @Success 200 {object} response.SuccessResponse
 // @Router /api/user/profile [GET]
 func (h *Handler) GetProfile(c echo.Context) error {
+```
+
+## 6. ConnectRPC Error Mapping
+
+```go
+func FromAppError(err error) error {
+    var appErr *apperrors.AppError
+    if !errors.As(err, &appErr) {
+        return connect.NewError(connect.CodeInternal, err)
+    }
+    switch appErr.Code {
+    case "NOT_FOUND":
+        return connect.NewError(connect.CodeNotFound, errors.New(appErr.Message))
+    case "ALREADY_EXISTS":
+        return connect.NewError(connect.CodeAlreadyExists, errors.New(appErr.Message))
+    // ...
+    }
+}
 ```

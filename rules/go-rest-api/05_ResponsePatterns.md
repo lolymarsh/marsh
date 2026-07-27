@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Response Patterns
+# Go Response Patterns (REST API)
 
 ## 1. Success Response
 

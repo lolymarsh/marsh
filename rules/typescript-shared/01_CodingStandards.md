@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# TypeScript Coding Standards
+# TypeScript Coding Standards (Shared)
 
 ## 1. General
 
@@ -36,7 +36,7 @@ const input = req.body as LoginInput; // no validation
 ## 4. Guard Clauses First
 
 ```typescript
-async Update(id: string, input: UpdateInput, adminId: string): Promise<UserResponse> {
+async Update(id: string, input: UpdateInput): Promise<UserResponse> {
   const existing = await this.repo.FindById(id);
   if (!existing) throw new NotFoundError('User not found');
 
@@ -76,9 +76,18 @@ export class UserRepository implements IUserRepository {
 4. Project modules (src/modules/...)
 ```
 
-## 8. Frontend Rules
+## 8. Naming Conventions
 
-- `model.ts`: NO React imports (pure TypeScript)
-- `view.tsx`: NO API calls (data via props only)
-- `controller.ts`: NO direct DB queries
-- Named exports only (no `export default` except `App`)
+| Item | Convention | Example |
+|---|---|---|
+| Files | kebab-case | `repo.ts`, `service.ts` |
+| Classes | PascalCase | `UserRepository` |
+| Interfaces | PascalCase + I prefix | `IUserRepository` |
+| Entity types | PascalCase + Entity | `UserEntity` |
+| Response types | PascalCase + Response | `UserResponse` |
+| Public methods | PascalCase | `FindById`, `Update` |
+| Private methods | camelCase | `toResponse` |
+| Hooks | camelCase + use | `useCustomerList` |
+| Components | PascalCase | `CustomerListView` |
+| Schema vars | camelCase | `loginSchema` |
+| API objects | camelCase + Api | `customerApi` |

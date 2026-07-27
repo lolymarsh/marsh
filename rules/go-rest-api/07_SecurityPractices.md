@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Security Practices
+# Go Security Practices (REST API)
 
 ## 1. Authentication
 
@@ -51,4 +51,5 @@ if !authz.IsAdmin(role) {
 
 - Request timeout via `ContextTimeout` middleware
 - Cloudflare Turnstile for bot protection (register/login)
-- Rate limiting at reverse proxy level (Nginx)
+- Rate limiting at reverse proxy level (Nginx) — see devops rules
+- CORS handled at reverse proxy level — see devops rules
