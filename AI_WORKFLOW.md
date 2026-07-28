@@ -117,6 +117,54 @@ implement phase 02 ตาม spec/2026-07-18_core/02_CUSTOMERS.md
 [ ] Import path ถูกต้อง?
 ```
 
+### 6. จัดการ External Documents อย่างมีประสิทธิภาพ
+
+**ปัญหา**: ส่ง PDF/Word/Excel ให้ AI โดยตรง → กิน context เปลือง
+
+**วิธีที่แนะนำ**: ใช้ **markitdown** (Microsoft) แปลงไฟล์เป็น Markdown ก่อน → AI อ่าน `.md` แทน
+
+**รองรับไฟล์**:
+- PDF, PowerPoint, Word, Excel
+- HTML, CSV, JSON, XML
+- ZIP (iterate contents), EPubs
+
+**ติดตั้ง**:
+```bash
+pip install markitdown
+# หรือ
+pip install 'markitdown[all]'  # รวม dependencies ทั้งหมด
+```
+
+**การใช้งาน**:
+```bash
+markitdown document.pdf > document.md
+markitdown presentation.pptx > presentation.md
+markitdown data.xlsx > data.md
+```
+
+**สำหรับ Linux/Mac** — ใช้ **rtk** (rtk-ai/rtk):
+```bash
+# rtk เป็น CLI wrapper ที่รวม markitdown + tools อื่นๆ
+rtk convert document.pdf
+```
+
+**Flow**:
+```
+External File (PDF/Word/Excel/HTML/CSV/...)
+    │
+    ▼ markitdown
+Markdown (.md)
+    │
+    ▼ AI อ่าน
+ประหยัด context + ได้ข้อมูลครบ
+```
+
+**ข้อดี**:
+- AI ไม่ต้อง parse binary files → ประหยัด token
+- Markdown เป็น format ที่ AI อ่านเข้าใจง่าย
+- แปลงครั้งเดียว → ใช้ได้หลายครั้ง
+- ใช้กับ AI tools อื่นได้ด้วย (Cursor, Copilot, etc.)
+
 ---
 
 ## การใช้ AI แบบ Step-by-Step (Full Example)
