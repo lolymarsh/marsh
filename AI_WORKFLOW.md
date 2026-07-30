@@ -349,5 +349,84 @@ Step 7: phase 02 → code → commit → phase 03 → ... → phase 08
 
 ---
 
-> **Last Updated**: 2026-07-18
+---
+
+## Skills ใน OpenCode
+
+Skills = reusable knowledge packages ที่ agent load ให้อัตโนมัติเมื่อเจองานที่ตรงกัน
+
+### Skills ที่ติดตั้งอยู่ (14 ตัว)
+
+| Skill | ผู้พัฒนา | เหมาะกับ |
+|---|---|---|
+| find-skills | vercel-labs/skills | ค้นหา skill อื่นๆ |
+| frontend-design | anthropics/skills | ออกแบบ UI/Frontend |
+| tdd | mattpocock/skills | Test-Driven Development |
+| code-review | mattpocock/skills | Review โค้ด |
+| handoff | mattpocock/skills | ส่งต่องานระหว่าง agent |
+| diagnosing-bugs | mattpocock/skills | วิเคราะห์บั๊ก |
+| improve-codebase-architecture | mattpocock/skills | ปรับปรุงโครงสร้างโค้ด |
+| skill-creator | anthropics/skills | สร้าง skill เอง |
+| shadcn | shadcn/ui | UI components |
+| supabase-postgres-best-practices | supabase/agent-skills | Database PostgreSQL |
+| vercel-react-best-practices | vercel-labs/agent-skills | React/Next.js |
+| web-design-guidelines | vercel-labs/agent-skills | การออกแบบเว็บ |
+| webapp-testing | anthropics/skills | ทดสอบ web app |
+| **writing-plans** | **obra/superpowers** | **เขียนแผน/PRD** |
+
+### วิธีใช้ Skills
+
+**อัตโนมัติ** — agent จะ load skill ที่เกี่ยวข้องให้เองตาม context เช่น:
+```
+implement customer module with tests
+```
+→ agent เห็นว่า `tdd`, `supabase-postgres-best-practices` เกี่ยวข้อง → load ให้
+
+**Manual** — reference ชื่อ skill ใน prompt ถ้าอยากบังคับใช้:
+```
+ใช้ tdd + supabase-postgres-best-practices: implement customer module
+```
+
+**ค้นหา** — ใช้ `find-skills` ถ้าอยากรู้ว่ามี skill ไหนเหมาะกับงาน:
+```
+ใช้ find-skills: หา skill ที่เหมาะกับการทำ API design
+```
+
+### Workflow การ Plan ด้วย Skills
+
+แทน Step 1-2 เดิม (dump idea → AI เขียน plan.md):
+
+**Step 1: Dump Idea + Skill Boost**
+```
+ใช้ writing-plans + to-prd:
+อยากทำระบบ erp สำหรับบริษัทติดตั้งแก๊สรถยนต์
+stack: react 19 + mui + tailwind / nodejs + express
+ช่วยวางแผนหน่อย
+```
+→ AI เขียน `plan.md` โดยใช้ `writing-plans` (โครงสร้างแผน) + `to-prd` (idea → spec)
+
+**Step 2: ต่อด้วย Architecture + Rules ปกติ**
+```
+ARCHITECTURE.md เลย
+ผมถนัด go ใช้ structure แบบนี้ [link go project]
+frontend ใช้ react mvc
+```
+
+### ตัวอย่างใน Workflow ปกติ
+
+**ไม่มี skill**:
+```
+implement phase 02 ตาม spec/02_CUSTOMERS.md
+```
+
+**มี skill hint**:
+```
+ใช้ tdd + supabase-postgres-best-practices:
+implement phase 02 ตาม spec/02_CUSTOMERS.md
+ตาม AGENTS.md rules + ARCHITECTURE.md patterns
+```
+
+---
+
+> **Last Updated**: 2026-07-30
 > **Next**: เริ่ม implement ตาม AGENTS.md — เริ่มจาก database schema → auth module
