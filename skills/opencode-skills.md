@@ -1,6 +1,6 @@
 # opencode skills
 
-## Skills ที่ติดตั้งอยู่ตอนนี้ (14 ตัว)
+## Skills ที่ติดตั้งอยู่ตอนนี้ (15 ตัว)
 
 | # | Skill | ผู้พัฒนา | การใช้งาน |
 |---|---|---|---|
@@ -17,7 +17,8 @@
 | 11 | vercel-react-best-practices | vercel-labs/agent-skills | React/Next.js best practices (frontend) |
 | 12 | web-design-guidelines | vercel-labs/agent-skills | แนวทางการออกแบบเว็บ (frontend) |
 | 13 | webapp-testing | anthropics/skills | ทดสอบ web application (testing) |
-| 14 | **writing-plans** | **obra/superpowers** | **เขียนแผน/PRD** |
+| 14 | writing-plans | obra/superpowers | เขียนแผน/PRD |
+| 15 | **to-spec** | **mattpocock/skills** | **สรุปงานที่คุยกันเป็น spec/PRD (ชื่อเดิม to-prd ถูก rename)** |
 
 Symlink จาก `~/.claude/skills/` → `~/.agents/skills/`
 
@@ -47,6 +48,7 @@ npx skills add <owner/repo>@<skill-name> -g -y
 | handoff | `npx skills add mattpocock/skills@handoff -g -y` |
 | diagnosing-bugs | `npx skills add mattpocock/skills@diagnosing-bugs -g -y` |
 | improve-codebase-architecture | `npx skills add mattpocock/skills@improve-codebase-architecture -g -y` |
+| to-spec (เดิมชื่อ to-prd) | `npx skills add mattpocock/skills@to-spec -g -y` |
 
 ### จาก `anthropics/skills`
 | Skill | คำสั่งติดตั้ง |

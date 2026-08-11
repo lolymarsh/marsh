@@ -35,7 +35,7 @@
 8. AI implement ทีละ module ตาม AGENTS.md rules
     │
     ▼ You
-9. คุณ review code + test → commit → next module
+9. คุณ review code + run security scan (Gitleaks/Semgrep) + test → commit → next module
 ```
 
 ## สิ่งที่คุณทำถูกแล้ว
@@ -112,6 +112,8 @@ implement phase 02 ตาม spec/2026-07-18_core/02_CUSTOMERS.md
 [ ] view.tsx ไม่มี API call?
 [ ] ไม่มี `any` type?
 [ ] Response format { code, message, data }?
+[ ] Security Scan ผ่าน (gitleaks + semgrep ไม่พบ High/Critical)?
+[ ] ไม่มี Hardcoded API Keys / Passwords หลุดในโค้ด?
 [ ] Test ผ่าน (npm test)?
 [ ] TypeScript compile ผ่าน (npx tsc --noEmit)?
 [ ] Import path ถูกต้อง?
@@ -348,6 +350,51 @@ Step 7: phase 02 → code → commit → phase 03 → ... → phase 08
 **คุณทำถูกทางแล้ว** — phase-based = best practice เพราะแยก concern ชัดเจน, AI รู้ขอบเขตงาน, commit แยกกันไม่พันกัน
 
 ---
+
+## Security Scanning Workflow (ความปลอดภัยระหว่างการพัฒนา)
+
+> ⚠️ **คำถามพบบ่อย**: ควรจะสแกน Security แค่ตอนจบโปรเจกต์ใช่ไหม?
+> **คำตอบคือ ไม่ควรสแกนแค่ตอนจบโปรเจกต์!** ต้องใช้แนวคิด **Shift-Left Security** (สแกนเรื่อยๆ ระหว่างเขียนโค้ด)
+
+### จังหวะการสแกนความปลอดภัย (Security Gates)
+
+1. **Every Commit (ทุกครั้งที่ Commit — อัตโนมัติ)**:
+   - ใช้ `pre-commit` รัน **Gitleaks** (ดักจับ Key/Secret หลุด) และ **Semgrep** (สแกนโค้ดสั้นๆ)
+   - ใช้เวลาเพียง < 2 วินาที ดักจับปัญหาก่อนโค้ดเข้า Git
+2. **Every Module / Feature (เมื่อ AI เขียนจบ 1 Module)**:
+   - สั่ง agy cli / opencode รัน `semgrep scan --config auto` เพื่อเช็กความเสี่ยง Injection, Auth, หรือ Logic ผิดพลาด
+   - ให้ AI ช่วยแก้ปัญหานั้นทันทีขณะที่บริบทของโมดูลยังสดใหม่อยู่
+3. **Final Gate (ก่อน Deploy / ส่งมอบงานจบโปรเจกต์)**:
+   - รัน Full Audit ด้วย **Trivy** เพื่อตรวจหา Vulnerability ทั้งหมดใน Dependencies, Package, Config และ Docker Images
+   - ยิงทดสอบ DAST (ถ้าเป็น Backend API)
+
+📖 *ดูคู่มือฉบับเต็มและคำสั่งติดตั้งได้ที่: `tools/security-scanning.md`*
+
+---
+
+## โปรแกรมแนะนำสำหรับเพิ่มประสิทธิภาพ (Recommended Tools)
+
+### 🚀 RTK — Rust Token Killer (`rtk-ai/rtk`)
+
+**RTK** คือ CLI Proxy / Middleware Tool (เขียนด้วยภาษา Rust) ที่ทำหน้าที่ดักจับและบีบอัด Output จากคำสั่ง Terminal (เช่น `git status`, `grep`, `pytest`, `cargo test`, `npm test`, `docker ps`) ก่อนส่งข้อความกลับเข้า Context Window ของ AI Agent ( Claude Code, Antigravity CLI / Gemini Agent, Cursor, Copilot)
+
+**ประโยชน์หลัก**:
+- **ประหยัด Token 60% – 90%**: ช่วยตัดข้อความซ้ำซ้อน และบีบอัด Output ทำให้ประหยัด Token และไม่เปลือง Context Window
+- **ทำงานอัตโนมัติ (Transparent Hook)**: ดักจับคำสั่งเชลล์อัตโนมัติผ่านระบบ `BeforeTool` Hook โดยผู้ใช้และ AI ไม่ต้องเปลี่ยนวิธีการพิมพ์คำสั่ง
+- **ประสิทธิภาพสูง**: ทำงานเร็วระดับ Native Binary (<10ms ต่อคำสั่ง)
+
+**การติดตั้งและใช้งาน**:
+```bash
+# ตรวจสอบเวอร์ชันและการติดตั้ง
+rtk --version
+
+# ตั้งค่า Hook สำหรับ Gemini CLI / Antigravity CLI
+rtk init -g --gemini --auto-patch
+rtk init --agent antigravity --auto-patch
+
+# ดูสถิติและวิเคราะห์การประหยัด Token ทั้งหมด
+rtk gain
+```
 
 ---
 
