@@ -374,27 +374,30 @@ Step 7: phase 02 → code → commit → phase 03 → ... → phase 08
 
 ## โปรแกรมแนะนำสำหรับเพิ่มประสิทธิภาพ (Recommended Tools)
 
-### 🚀 RTK — Rust Token Killer (`rtk-ai/rtk`)
+### 🚀 RTK — Intercept (rtk-ai/rtk)
 
-**RTK** คือ CLI Proxy / Middleware Tool (เขียนด้วยภาษา Rust) ที่ทำหน้าที่ดักจับและบีบอัด Output จากคำสั่ง Terminal (เช่น `git status`, `grep`, `pytest`, `cargo test`, `npm test`, `docker ps`) ก่อนส่งข้อความกลับเข้า Context Window ของ AI Agent ( Claude Code, Antigravity CLI / Gemini Agent, Cursor, Copilot)
+📚 **รายละเอียดฉบับเต็ม (กลไก hook, flow input→output, rules, setup):** ดูที่ [`intercept/`](intercept/README.md) ในโปรเจกต์นี้
 
-**ประโยชน์หลัก**:
-- **ประหยัด Token 60% – 90%**: ช่วยตัดข้อความซ้ำซ้อน และบีบอัด Output ทำให้ประหยัด Token และไม่เปลือง Context Window
-- **ทำงานอัตโนมัติ (Transparent Hook)**: ดักจับคำสั่งเชลล์อัตโนมัติผ่านระบบ `BeforeTool` Hook โดยผู้ใช้และ AI ไม่ต้องเปลี่ยนวิธีการพิมพ์คำสั่ง
-- **ประสิทธิภาพสูง**: ทำงานเร็วระดับ Native Binary (<10ms ต่อคำสั่ง)
+### 🔀 เครื่องมือ Intercept อื่นๆ ที่น่าสนใจ (ทางเลือก/เสริม RTK)
 
-**การติดตั้งและใช้งาน**:
-```bash
-# ตรวจสอบเวอร์ชันและการติดตั้ง
-rtk --version
+> ค้นจาก GitHub (2026-08-11) — กลุ่มเครื่องมือแนวเดียวกัน: ดักจับ/บีบอัด output ของคำสั่ง shell ก่อนเข้าสู่ context ของ AI agent
 
-# ตั้งค่า Hook สำหรับ Gemini CLI / Antigravity CLI
-rtk init -g --gemini --auto-patch
-rtk init --agent antigravity --auto-patch
+| เครื่องมือ | สแตก | จุดเด่น | เหมาะกับ |
+|---|---|---|---|
+| [**kuro-lean** (`kt`)](https://github.com/kurovu146/kuro-lean) | Bun + Claude Code | บีบอัด shell output + **Guard** บล็อกคำสั่งที่เผา token ก่อนรัน (เช่น `find /`, cat ไฟล์ 5MB) + **แสดงราคาจริง** ต่อ session + **กู้ session** ที่ prompt cache หมดอายุแล้ว (~2.5k tokens) | คนที่ใช้ Claude Code และอยากเห็นว่าเงินหายไปกับอะไร (cache read/write ~89% ของบิล ไม่ใช่ output) |
+| [**aivenv / aienv**](https://github.com/xmonader/aivenv) | Go | AI-optimized virtual environment — บีบอัด CLI output 40–90% | ใช้ wrapper แทน shell ปกติ |
+| [**token-trim**](https://github.com/Junr-Studio/token-trim) | TypeScript | บีบอัด output ของ shell command ที่ agent รัน เพื่อตัด token ใน context | ฝั่ง agent อื่นๆ (ไม่พึ่ง Claude Code hooks) |
+| [**bitrun**](https://github.com/BitSec01/bitrun) | Rust | shell-output token reducer — บีบอัดทั้งคำสั่งและอ่านไฟล์ใหญ่ก่อนเข้าสู่ agent | คล้าย RTK แต่โฟกัสอ่านไฟล์ใหญ่ |
 
-# ดูสถิติและวิเคราะห์การประหยัด Token ทั้งหมด
-rtk gain
-```
+**บทเรียนจาก kuro-lean (มีข้อมูลวัดจริง 93k+ messages):**
+- **ค่าใช้จ่ายส่วนใหญ่ (~89%) อยู่ที่ cache read + cache write** ไม่ใช่ output — การบีบอัด output อย่างเดียวช่วยได้จำกัด
+- ค่า token 1 ตัวที่ load เข้า context = 2× input (cache write) + 0.1× input × ทุกรอบที่เหลือ → **การไม่ load ข้อมูลที่ไม่จำเป็น (หรือ `/clear`/แยก session)** ประหยัดกว่า compression มาก
+- session ยาว 600–3000 turns (1% ของ session) คิดเป็น 43.7% ของบิล — แยก session ตามงาน = ลดได้ ~14%
+
+**คำแนะนำของผม:**
+- **RTK** = ตัวหลักที่ใช้อยู่ (ติดตั้งแล้ว, hook ครบ Claude Code/OpenCode) — ใช้ต่อ
+- **kuro-lean** = น่าลองที่สุดถ้าใช้ Claude Code เพราะวัด cost จริง + Guard บล็อกคำสั่งก่อนรัน (เสริม RTK ได้ ไม่ต้องเลือกอย่างใดอย่างหนึ่ง)
+- สิ่งที่ได้ผลจริงโดยไม่ต้องติดตั้งอะไร: `/compact` หรือ `/clear` ระหว่างงาน, แยก session ยาวๆ, ใช้ subagent ที่ context ตายพร้อมตัวมันเอง
 
 ---
 
