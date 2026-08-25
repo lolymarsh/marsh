@@ -34,26 +34,46 @@
 
 ---
 
-## #1 — เขียน Plan / Spec / PRD
+## #1 — วางแผน & สร้าง Spec ตามโครงสร้างโปรเจกต์ (grill-me + to-spec)
 
+### ขั้นตอนที่ 1: สัมภาษณ์ความต้องการ (Grill)
 ```text
-ใช้ writing-plans + to-spec:
+ใช้ grill-me:
 
-ช่วยวางแผน [ชื่อโปรเจกต์/ฟีเจอร์] ให้หน่อย
-
+อยากทำระบบ [ชื่อโปรเจกต์/ฟีเจอร์]
 บริบท:
-- เป้าหมาย: [อยากได้อะไร สําหรับใคร แก้ปัญหาอะไร]
-- stack: [เช่น Go + Echo + MySQL / React 19 + Vite + TS]
+- เป้าหมาย: [อยากได้อะไร สำหรับใคร แก้ปัญหาอะไร]
+- Stack: [เช่น Go + Echo + MySQL / React 19 + Vite + TS]
+- ขอบเขต: [เช่น Core modules: Auth, Customer, Invoice]
 - ข้อจำกัด: [เช่น ไม่มี deploy เอาไว้ศึกษา / ใช้ MySQL แทน Postgres]
-- deadline/ขนาด: [เช่น 2 สัปดาห์ / MVP ก่อน]
 
-สิ่งที่อยากได้:
-1. plan.md — master plan: modules, phases, dependencies, timeline
-2. แยกเป็น phase เล็กๆ ที่ทำทีละอันได้ (1 phase = 1 commit)
-3. แต่ละ phase มี: scope + ไม่เอา + acceptance criteria + คำสั่ง verify
+ช่วยซักถาม/สัมภาษณ์ผมแบบเจาะลึกเพื่อเก็บ Requirement, Edge Cases และ Trade-offs ทั้งหมดก่อนเริ่มทำ Spec
 ```
 
-**ผลลัพธ์ที่ควรได้**: `plan.md` + `spec/YYYY-MM-DD_<track>/` ตาม convention ใน `01_AI_WORKFLOW.md`
+---
+
+### ขั้นตอนที่ 2: สังเคราะห์เป็น Spec หลายไฟล์ตามโครงสร้าง (To Spec)
+```text
+ใช้ to-spec:
+
+สรุปข้อตกลงและรายละเอียดทั้งหมดที่คุยกันลงโฟลเดอร์ spec ตาม convention ของเรา:
+
+1. สร้าง spec/plan.md (Master Plan ภาพรวม 1 หน้า: Modules, Timeline, Architecture)
+2. สร้างโฟลเดอร์ track: spec/YYYY-MM-DD_[track_name]/
+3. แยกไฟล์ spec ตามโมดูลย่อย (ห้ามรวมเป็นไฟล์เดียว):
+   - spec/YYYY-MM-DD_[track]/01_FOUNDATION.md
+   - spec/YYYY-MM-DD_[track]/02_[MODULE_NAME].md
+   - ...
+
+โครงสร้างภายในแต่ละไฟล์โมดูลย่อย:
+- 1. Scope & Out of Scope (สิ่งที่ทำ / สิ่งที่ไม่ทำ)
+- 2. Data Flow & Schemas (DB Table / DTO / Zod Schema)
+- 3. API Endpoints หรือ UI Components ที่ต้องมี
+- 4. Acceptance Criteria (Checklist ตรวจสอบ)
+- 5. Verification Commands (คำสั่งรันเทส)
+```
+
+**ผลลัพธ์ที่ได้**: โครงสร้าง `spec/YYYY-MM-DD_<track>/NN_NAME.md` ครบถ้วน พร้อมนำไปสั่ง `/to-tickets` หรือ `/tdd` ต่อได้ทันที
 
 ---
 

@@ -1,150 +1,83 @@
 # opencode skills
 
-## Skills ที่ติดตั้งอยู่ตอนนี้ (15 ตัว)
+## Skills ที่ติดตั้งอยู่ตอนนี้ — Core Set (10 ตัว)
 
-| # | Skill | ผู้พัฒนา | การใช้งาน |
+คัดเลือกเฉพาะชุดที่จำเป็น ครอบคลุมทั้ง Main Flow (วางแผน → แตกงาน → โค้ด → ตรวจ) และ Tech Stack สำคัญ ไม่ซ้ำซ้อน:
+
+| # | Skill | ผู้พัฒนา | หน้าที่หลัก |
 |---|---|---|---|
-| 1 | find-skills | vercel-labs/skills | ค้นหา skill อื่นๆ |
-| 2 | frontend-design | anthropics/skills | ออกแบบ UI/Frontend |
-| 3 | tdd | mattpocock/skills | Test-Driven Development |
-| 4 | code-review | mattpocock/skills | Review โค้ด |
-| 5 | handoff | mattpocock/skills | ส่งต่องานระหว่าง agent |
-| 6 | diagnosing-bugs | mattpocock/skills | วิเคราะห์บั๊ก |
-| 7 | improve-codebase-architecture | mattpocock/skills | ปรับปรุงโครงสร้างโค้ด |
-| 8 | skill-creator | anthropics/skills | สร้าง skill เอง |
-| 9 | shadcn | shadcn/ui | UI components |
-| 10 | supabase-postgres-best-practices | supabase/agent-skills | ฐานข้อมูล PostgreSQL (backend) |
-| 11 | vercel-react-best-practices | vercel-labs/agent-skills | React/Next.js best practices (frontend) |
-| 12 | web-design-guidelines | vercel-labs/agent-skills | แนวทางการออกแบบเว็บ (frontend) |
-| 13 | webapp-testing | anthropics/skills | ทดสอบ web application (testing) |
-| 14 | writing-plans | obra/superpowers | เขียนแผน/PRD |
-| 15 | **to-spec** | **mattpocock/skills** | **สรุปงานที่คุยกันเป็น spec/PRD (ชื่อเดิม to-prd ถูก rename)** |
+| 1 | **grill-me** | mattpocock/skills | **สัมภาษณ์/ซักถาม Requirements & Edge cases ก่อนเริ่มเขียน Spec** |
+| 2 | **to-spec** | mattpocock/skills | **สังเคราะห์ข้อสรุปจากการคุยเป็น Spec/PRD อย่างเป็นทางการ** |
+| 3 | **to-tickets** | mattpocock/skills | **ซอย Spec ออกเป็น Tracer-bullet tickets ย่อยๆ (Atomic tasks)** |
+| 4 | **tdd** | mattpocock/skills | **เขียนโค้ดแบบ Test-Driven Development (Red-Green-Refactor)** |
+| 5 | **code-review** | mattpocock/skills | **Dual Review: ตรวจเทียบ Spec Match + Standards (`rules/`, `AGENTS.md`)** |
+| 6 | **diagnosing-bugs** | mattpocock/skills | **สืบหา Root Cause ของบั๊กอย่างเป็นวิทยาศาสตร์ ก่อนเริ่มแตะโค้ด** |
+| 7 | **handoff** | mattpocock/skills | **สรุป Context ย่อส่วนข้าม Session หรือส่งต่องานให้อีก Agent** |
+| 8 | **shadcn** | shadcn/ui | **จัดการ UI components, presets, styling (Frontend)** |
+| 9 | **supabase-postgres-best-practices** | supabase/agent-skills | **Best practices & Query performance ของ PostgreSQL (Backend/DB)** |
+| 10 | **vercel-react-best-practices** | vercel-labs/agent-skills | **React/Next.js performance patterns & best practices (Frontend)** |
 
-Symlink จาก `~/.claude/skills/` → `~/.agents/skills/`
+Symlink / Global Path: `~/.agents/skills/` และ `~/.claude/skills/`
 
-## วิธีติดตั้ง
+---
 
+## ตอบคำถาม: ควรใช้แบบ "ต่อ Session" หรือ "แยก Session"?
+
+> **หลักการที่ดีที่สุดคือ: "แยก Session ตาม Phase ใหญ่ แต่ใช้ Session เดียวกันในลูปย่อย"**
+
+### ทำไมไม่ควรใช้ Session เดียวยาวตั้งแต่ต้นจนจบโปรเจกต์?
+1. **Context Window บวม**: ยิ่งคุยยาว AI จะเริ่มหลง ลืมกฎใน `AGENTS.md` หรือแก้โค้ดหลุดสโคป
+2. **เปลือง Token**: ทุกครั้งที่ส่ง prompt ใหม่ AI ต้องอ่านประวัติแชทเก่าซ้ำทั้งหมด
+3. **เสี่ยง Hallucination**: AI จะเริ่มสับสนระหว่าง "สิ่งที่เพิ่งคุย" กับ "สิ่งที่ทำเสร็จไปแล้ว"
+
+---
+
+## 🎯 แนะนำรูปแบบ Session Lifecycle (มาตรฐาน)
+
+### 🔹 Session ที่ 1: ช่วง Planning & Spec (สัมภาษณ์ $\rightarrow$ สเปก $\rightarrow$ แตกตั๋ว)
+*ใช้ Session เดียวกันได้เพราะเป็นการต่อยอดข้อมูลความคิด:*
+1. รัน `/grill-me` (AI ซักถามคุณจนตกผลึก)
+2. รัน `/to-spec` (AI สรุปเป็นไฟล์ `spec/...`)
+3. รัน `/to-tickets` (AI แตกเป็นตั๋ว tracer tickets)
+4. คุณสร้าง/อัปเดต `ARCHITECTURE.md` + `AGENTS.md` $\rightarrow$ **Commit เข้า baseline ด้วย `jj`**
+5. **🎯 จบ Session 1 (ขึ้นแชทใหม่)**
+
+---
+
+### 🔹 Session ที่ 2 เป็นต้นไป: ช่วง Implementation (1 Ticket หรือ 1 Feature = 1 Session)
+*เปิด Session ใหม่ทุกครั้งที่เริ่ม Ticket/Module ใหม่:*
+1. เปิดแชทใหม่ (Context สะอาด 100%)
+2. Prompt สั้นๆ: `"ทำ ticket 01 ตาม AGENTS.md ด้วย tdd"`
+3. AI โค้ดเสร็จ $\rightarrow$ รัน `/code-review`
+4. รันเทส/ความปลอดภัย $\rightarrow$ **Commit ด้วย `jj describe -m "feat: ..."`**
+5. **🎯 จบ Session $\rightarrow$ เปิดแชทใหม่ทำ Ticket ถัดไป**
+
+---
+
+### 🔹 Session พิเศษ: เมื่อเจองานด่วน / บั๊ก / แก้ Legacy
+*เปิด Session แยกเฉพาะกิจ:*
+1. เปิดแชทใหม่
+2. เรียก `/diagnosing-bugs` วิเคราะห์หาสาเหตุ
+3. รัน `/tdd` เขียน failing test ดักบั๊ก $\rightarrow$ แก้โค้ดจนผ่าน
+4. รัน `/code-review` ตรวจสอบว่าไม่กระทบจุดอื่น $\rightarrow$ **Commit Fix**
+
+---
+
+### 🔹 ถ้าแชทยาวเกินไปแล้วยังไม่จบ?
+* เรียกใช้ `/handoff`
+* AI จะสร้างเอกสารสรุปสถานะล่าสุด (`handoff.md`)
+* ให้คุณ copy สรุปนั้นไปเปิดใน Session ใหม่แล้วสั่งทำต่อได้ทันทีโดยไม่เสียบริบทเดิม
+
+---
+
+## วิธีติดตั้ง / ถอนการติดตั้ง Skills
+
+### ติดตั้งเพิ่ม
 ```bash
-npx skills add <owner/repo>@<skill-name> -g -y
+npx -y skills add <owner/repo>@<skill-name> -g -y
 ```
 
-- `-g` = global (อยู่ที่ `~/.claude/skills/` ซึ่ง opencode อ่านได้)
-- `-y` = ข้ามยืนยัน
-
-### ติดตั้ง manual (ไม่มี npx)
-
-สร้างโฟลเดอร์ `SKILL.md` ใน path ใด path หนึ่ง:
-- `~/.config/opencode/skills/<name>/SKILL.md`
-- `.opencode/skills/<name>/SKILL.md`
-- `~/.claude/skills/<name>/SKILL.md`
-
-## แนะนำ skills ที่น่าสนใจ
-
-### จาก `mattpocock/skills`
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| tdd | `npx skills add mattpocock/skills@tdd -g -y` |
-| code-review | `npx skills add mattpocock/skills@code-review -g -y` |
-| handoff | `npx skills add mattpocock/skills@handoff -g -y` |
-| diagnosing-bugs | `npx skills add mattpocock/skills@diagnosing-bugs -g -y` |
-| improve-codebase-architecture | `npx skills add mattpocock/skills@improve-codebase-architecture -g -y` |
-| to-spec (เดิมชื่อ to-prd) | `npx skills add mattpocock/skills@to-spec -g -y` |
-
-### จาก `anthropics/skills`
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| frontend-design | `npx skills add anthropics/skills@frontend-design -g -y` |
-| skill-creator | `npx skills add anthropics/skills@skill-creator -g -y` |
-| webapp-testing | `npx skills add anthropics/skills@webapp-testing -g -y` |
-
-### จาก `vercel-labs/agent-skills`
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| vercel-react-best-practices | `npx skills add vercel-labs/agent-skills@vercel-react-best-practices -g -y` |
-| web-design-guidelines | `npx skills add vercel-labs/agent-skills@web-design-guidelines -g -y` |
-
-### จาก `obra/superpowers`
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| systematic-debugging | `npx skills add obra/superpowers@systematic-debugging -g -y` |
-| test-driven-development | `npx skills add obra/superpowers@test-driven-development -g -y` |
-| writing-plans | `npx skills add obra/superpowers@writing-plans -g -y` |
-
-### สำหรับวางแผน (Planning)
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| writing-plans | `npx skills add obra/superpowers@writing-plans -g -y` |
-
-### อื่นๆ
-| Skill | คำสั่งติดตั้ง |
-|---|---|
-| shadcn (shadcn/ui) | `npx skills add shadcn/ui@shadcn -g -y` |
-| supabase-postgres-best-practices | `npx skills add supabase/agent-skills@supabase-postgres-best-practices -g -y` |
-| sentry-cli | `npx skills add sentry/dev@sentry-cli -g -y` |
-
-## ค้นหา skills เพิ่ม
-
+### ถอนการติดตั้ง (ลบโฟลเดอร์)
 ```bash
-npx skills find <keyword>
+rm -rf ~/.agents/skills/<skill-name>
 ```
-
-หรือดู leaderboard: https://skills.sh/
-
-## วิธีใช้งาน skills
-
-### แบบอัตโนมัติ (แนะนำ)
-
-opencode agent จะเห็นรายการ skills ที่มี และ load skill ที่เกี่ยวข้องให้อัตโนมัติตาม context ของงาน — ไม่ต้อง prompt พิเศษ
-
-เช่น ถ้าสั่ง:
-```
-implement customer module with tests
-```
-agent จะเห็นว่า `tdd`, `code-review`, `supabase-postgres-best-practices` เกี่ยวข้อง → load ให้เอง
-
-### แบบ Manual (บังคับใช้)
-
-แค่ reference ชื่อ skill ใน prompt:
-```
-ใช้ tdd skill: implement customer module, เขียน test ก่อน code
-```
-
-### ตัวอย่างการเรียกใช้ใน workflow ของคุณ
-
-แทน prompt ปกติ:
-```
-implement phase 02 ตาม spec/02_CUSTOMERS.md
-```
-
-เติม skill hint ไป:
-```
-ใช้ tdd + supabase-postgres-best-practices:
-implement phase 02 ตาม spec/02_CUSTOMERS.md
-ตาม AGENTS.md rules + ARCHITECTURE.md patterns
-```
-
-### ตรวจสอบว่า skill ถูกใช้มั้ย
-
-ถ้าไม่แน่ใจว่ามีการ load skill หรือเปล่า — ถาม agent ตรงๆ:
-```
-ใช้ find-skills skill หา skill ที่เหมาะกับงาน frontend ให้หน่อย
-```
-
-หรือดูใน context ว่า agent พูดถึง skill หรือ mention skill ชื่อนั้นๆ
-
-### สรุป
-
-| วิธี | ทำยังไง |
-|---|---|
-| อัตโนมัติ | แค่ทำงานปกติ — agent เลือก skill ให้เอง |
-| Manual | พิมพ์ `ใช้ <skill-name>:` นำหน้า prompt |
-| ค้นหา skill เพิ่ม | `ใช้ find-skills: หา skill ที่เหมาะกับ <งาน>` |
-
-## ตำแหน่งที่ opencode ค้นหา skills
-
-- `~/.config/opencode/skills/<name>/SKILL.md`
-- `.opencode/skills/<name>/SKILL.md`
-- `~/.claude/skills/<name>/SKILL.md`
-- `.claude/skills/<name>/SKILL.md`
-- `~/.agents/skills/<name>/SKILL.md`
-- `.agents/skills/<name>/SKILL.md`

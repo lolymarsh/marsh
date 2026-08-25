@@ -5,80 +5,77 @@
 
 ---
 
-## TL;DR — Flow การใช้งาน AI ที่ถูกต้อง (แบบที่คุณใช้อยู่)
+## TL;DR — Flow การใช้งาน AI ที่ผสาน The Main Flow (AI Hero / Matt Pocock)
 
 ```
-ไอเดียในหัว
-    │
-    ▼ You
-1. Dump ความต้องการ + Stack + Context ให้ AI
-    │
-    ▼ AI
-2. AI เขียน plan.md (Master Plan)
-    │
-    ▼ You
-3. คุณทบทวน + แก้ไข + เพิ่ม requirement
-    │
-    ▼ AI
-4. AI เขียน ARCHITECTURE.md (Pattern, Template, Rules)
-    │
-    ▼ You
-5. คุณเพิ่มกฎเฉพาะ (pagination, transaction, version check)
-    │
-    ▼ AI
-6. AI สร้าง AGENTS.md (Rules for AI to follow during implementation)
-    │
-    ▼ You
-7. คุณ commit plan + architecture + agents → project baseline
-    │
-    ▼ AI
-8. AI implement ทีละ module ตาม AGENTS.md rules
-    │
-    ▼ You
-9. คุณ review code + run security scan (Gitleaks/Semgrep) + test → commit → next module
+[ไอเดีย / Requirement ใหม่]
+         │
+         ▼ (Agent & You)
+1. /grill-me หรือ /grill-with-docs ───► AI ยิงคำถามสัมภาษณ์ สรุป Edge Cases & Trade-offs
+         │
+         ▼ (AI)
+2. /to-spec (หรือ plan.md) ──────────► สังเคราะห์การคุยเป็น Spec ชัดเจน
+         │
+         ▼ (AI & You)
+3. กำหนด ARCHITECTURE.md + AGENTS.md ─► ดึง coding rules จาก rules/ เป็น Baseline
+         │
+         ▼ (AI)
+4. /to-tickets ──────────────────────► ซอยงานเป็น Tracer-bullet tickets (Atomic tasks เล็กๆ)
+         │
+         ▼ (AI)
+5. /implement หรือ /tdd ─────────────► Implement ทีละ ticket ด้วย Test-First
+         │
+         ▼ (AI)
+6. /code-review ─────────────────────► Dual Review: เช็ค Spec Match + AGENTS.md Standards
+         │
+         ▼ (You)
+7. jj describe -m "feat: ..." ────────► Commit ผ่าน jj ทีละชิ้นงานย่อย
 ```
 
 ---
 
-## เริ่มงานตามสถานการณ์โปรเจกต์ (4 กรณี)
+## เริ่มงานตามสถานการณ์โปรเจกต์ (4 กรณี) + Skill Map
 
-> TL;DR ข้างบน = กรณี **เริ่มโปรเจกต์ใหม่** ด้านล่างคือวิธีรับมืออีก 3 สถานการณ์ที่เจอบ่อย
+| สถานการณ์ | สิ่งแรกที่ต้องทำ | Skills ที่แนะนำให้เรียกใช้ | เอกสารที่ต้องสร้าง/ใช้ |
+|---|---|---|---|
+| **1. เริ่มโปรเจกต์ใหม่** | สัมภาษณ์ความต้องการ → วาง Spec + Rules | `/grill-me` → `/to-spec` → `/to-tickets` → `/tdd` → `/code-review` | ✅ spec เต็ม (plan + phases + AGENTS.md) |
+| **2. เข้าไปกลางโปรเจกต์** (มีโค้ดแล้ว บางส่วนเสร็จ) | สำรวจภาพรวม + ห้ามเขียนทับโค้ดเดิม | `/improve-codebase-architecture` (สำรวจ) → `/to-tickets` (ซอยงานที่เหลือ) | ⚠️ mini-spec ต่อ feature (1 หน้า) |
+| **3. โปรเจกต์ค้าง กลับมาทำต่อ** (ยังไม่จบ) | เช็คสถานะปัจจุบัน vs spec เดิม | `/ask-matt` (หา flow) → `/handoff` (สรุป context ต่อช่วง) | ⚠️ checklist สถานะปัจจุบัน (`status.md`) |
+| **4. โปรเจกต์เก่า เข้าไปแก้** (production / bug) | หา Root Cause + ห้ามแตะส่วนอื่น | `/diagnosing-bugs` (วิเคราะห์) → `/tdd` (เขียน failing test) → `/code-review` | ❌ ไม่ต้อง spec (ใช้ failing test + prompt เจาะจง) |
 
-| สถานการณ์ | สิ่งแรกที่ต้องทำ | ต้องสร้าง spec ใหม่มั้ย |
-|---|---|---|
-| **1. เริ่มโปรเจกต์ใหม่** | ทำตาม TL;DR: idea → plan → spec → ARCHITECTURE → AGENTS.md → implement | ✅ spec เต็ม (plan + phases) |
-| **2. เข้าไปกลางโปรเจกต์** (มีโค้ดแล้ว บางส่วนเสร็จ) | อ่านโค้ด/เอกสารที่มีอยู่ให้เข้าใจก่อน **ห้าม AI เขียนทับ** | ⚠️ mini-spec ต่อ feature (1 หน้า) ไม่ต้อง spec ทั้งโปรเจกต์ |
-| **3. โปรเจกต์ค้าง กลับมาทำต่อ** (ยังไม่จบ) | เช็คสถานะ: อะไรเสร็จแล้ว/ค้างอยู่ → เขียน "สถานะปัจจุบัน" ก่อน | ⚠️ spec เดิมยังใช้ได้ — อัพเดท checklist + เขียนสถานะปัจจุบันก่อน |
-| **4. โปรเจกต์เก่า เข้าไปแก้** (production / โค้ดเก่า) | เข้าใจโค้ดเดิม + หา root cause ก่อนแก้อะไร | ❌ ไม่ต้อง spec — เขียน failing test + อธิบายการแก้ใน prompt |
+### กรณี 1: เริ่มโปรเจกต์ใหม่ (The Main Flow)
+1. **สัมภาษณ์ & สรุปความต้องการ**: ใช้ `/grill-me` หรือ `/grill-with-docs` ให้ AI ยิงคำถามเพื่อเคลียร์ความคลุมเครือ
+2. **สร้าง Spec & Baseline**: สังเคราะห์เป็น spec ด้วย `/to-spec` และสร้าง `ARCHITECTURE.md` + `AGENTS.md`
+3. **แตกงานย่อย**: สั่ง `/to-tickets` ซอยเป็น tracer-bullet tasks เล็กๆ
+4. **Implement**: ทำทีละ ticket ด้วย `/implement` หรือ `/tdd` (Red-Green-Refactor)
+5. **Review & Commit**: รัน `/code-review` ตรวจ 2 มิติ (Spec Match + Architecture Standard) ก่อน commit
 
 ### กรณี 2: เข้าไปกลางโปรเจกต์ (มีโค้ดอยู่แล้ว)
-
-1. **สำรวจก่อน**: ให้ AI อ่านโครงสร้าง + เอกสาร (README/AGENTS.md) แล้วสรุปให้ฟังก่อน
-2. **เช็คสถานะ**: อะไรเสร็จแล้ว อะไรยังไม่ทำ (ดูจาก code + TODO + commits)
-3. **mini-spec ต่อ feature**: สำหรับงานที่รับมา เขียน 1 หน้า: เป้าหมาย / ไฟล์ที่ต้องแตะ / acceptance criteria
-4. ทำงานทีละ feature เล็กๆ ตาม mini-spec → review → commit
-5. **ห้าม** ให้ AI "ทำต่อจากที่ค้าง" โดยไม่รู้สถานะจริง — เดาไปก่อน = พัง
+1. **สำรวจสถาปัตยกรรมเดิม**: รัน `/improve-codebase-architecture` ให้ AI วิเคราะห์โครงสร้างและ pattern เดิม
+2. **เช็คสถานะ**: ดูว่าอะไรเสร็จแล้ว อะไรค้างอยู่ (จาก code, TODOs, commits)
+3. **Mini-spec & Tickets**: เขียน mini-spec 1 หน้า หรือใช้ `/to-tickets` สำหรับ feature เฉพาะที่ต้องทำ
+4. **Implement ทีละนิด**: ทำตาม mini-spec → รัน `/code-review` เทียบกับโค้ดเดิม → commit
+5. **ข้อควรระวัง**: ห้ามให้ AI "เดาและทำต่อเอง" โดยไม่สแกนโครงสร้างเดิมก่อน
 
 ### กรณี 3: โปรเจกต์ค้าง กลับมาทำต่อ
+1. **ฟื้น Context**: อ่าน spec/plan เดิม หรือใช้ `/handoff` เพื่อดูสรุปช่วงการทำงาน
+2. **สร้างสถานะปัจจุบัน**: สร้าง checklist: ✅ เสร็จแล้ว / 🔄 กำลังทำ / ⬜ ยังไม่ทำ
+3. **ตรวจสอบความสอดคล้อง**: เช็คว่าโค้ดจริงกับ spec เดิมตรงกันไหม ถ้าไม่ตรงให้อัปเดต spec ก่อน
+4. **ทำต่อทีละ Ticket**: แตกงานย่อยต่อจากจุดที่ค้างด้วย `/to-tickets`
+5. **ส่งต่องาน**: เมื่อจบรอบการทำงาน ให้เรียก `/handoff` สรุปสถานะทิ้งไว้สำหรับ session ถัดไป
 
-1. **อ่าน spec/plan เดิม** เพื่อฟื้น context ว่า design ตั้งใจไว้ยังไง
-2. **สร้างสถานะปัจจุบัน** (`status.md` หรือ section ใน spec): ✅ เสร็จแล้ว / 🔄 กำลังทำ / ⬜ ยังไม่ทำ
-3. **เช็คโค้ดจริงเทียบกับ spec**: บางทีโค้ดเดินหน้าเกิน spec หรือ spec ล้าสมัย → อัพเดท spec ก่อน
-4. ต่อจากจุดที่ค้างเป็น phase เล็กๆ (ไม่ต้องเริ่มใหม่)
-5. ถ้า spec เดิมหาย/ไม่มี → สร้าง mini-spec จากโค้ดจริง (reverse-engineer) ก่อนทำต่อ
-
-### กรณี 4: โปรเจกต์เก่า เข้าไปแก้ (production / legacy)
-
-1. **เข้าใจโค้ดเดิมก่อน**: อ่านโมดูลที่เกี่ยวข้อง + เข้าใจ data flow เดิม
-2. **หา root cause** ให้ AI วิเคราะห์ก่อน (diagnosing-bugs skill) — อย่าให้แก้ตามอาการ
-3. **เขียน failing test ก่อน** ที่ reproduce บั๊ก → ให้ AI แก้ให้ test ผ่าน
-4. **แก้เล็กๆ + ไม่แตะส่วนอื่น**: ระบุใน prompt ว่า "แก้เฉพาะ X ห้าม refactor อย่างอื่น"
-5. **รัน regression ทั้งหมด** (test เดิม + ใหม่) + security scan ก่อน commit
+### กรณี 4: โปรเจกต์เก่า เข้าไปแก้ (Production / Bug Fix / Legacy)
+1. **เข้าใจ Root Cause ก่อน**: เรียก `/diagnosing-bugs` ให้ AI สืบหาต้นตออย่างเป็นระบบ ห้ามแก้ตามอาการ
+2. **เขียน Failing Test ดักก่อน**: รัน `/tdd` เขียน test เคสที่พังเพื่อยืนยันว่าเกิดบั๊กจริง
+3. **แก้เฉพาะจุด (Isolated Fix)**: ให้ AI แก้โค้ดจน failing test ผ่าน โดยสั่งห้าม refactor ส่วนอื่น
+4. **Regression & Security Check**: รัน test ทั้งหมด + รัน `/code-review` เช็คว่ากระทบจุดอื่นไหม
+5. **Commit**: `jj describe -m "fix(module): bug explanation"`
 
 **หลักคิดรวมทุกกรณี:**
 - สเปกคือ "สัญญากับ AI" — ใหญ่แค่ไหน ขึ้นกับขนาดงาน ไม่ใช่ทุกงานต้อง spec เต็ม
 - ก่อน AI เขียนอะไร → ต้องรู้สถานะปัจจุบันของโปรเจกต์ก่อนเสมอ
-- งานแก้ง่าย (bug fix) → failing test + prompt ดีๆ พอ งานใหม่/ใหญ่ → spec
+- งานบั๊ก/งานแก้จุดเล็ก $\rightarrow$ `/diagnosing-bugs` + `/tdd`
+- งานฟีเจอร์ใหม่/งานใหญ่ $\rightarrow$ The Main Flow (`/grill-me` $\rightarrow$ `/to-spec` $\rightarrow$ `/to-tickets` $\rightarrow$ `/implement` $\rightarrow$ `/code-review`)
 
 ---
 
