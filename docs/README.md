@@ -7,18 +7,16 @@
 
 | ลำดับ | ไฟล์ | เนื้อหา | อ่านเมื่อไหร่ |
 |---|---|---|---|
-| **01** | [`01_AI_WORKFLOW.md`](01_AI_WORKFLOW.md) | Flow หลัก: idea → plan → spec → ARCHITECTURE → AGENTS.md → implement + **วิธีเริ่มงาน 4 สถานการณ์** (ใหม่/กลาง/ค้าง/เก่า) | ⭐ **ก่อนเริ่มงานทุกครั้ง** — บังคับอ่าน |
-| **02** | [`02_prompt-templates.md`](02_prompt-templates.md) | 11 prompt templates ที่แมปกับ skill (implement Go/React/Next/Python, แก้บั๊ก, review, handoff ฯลฯ) | เมื่อจะสั่งงาน AI — เลือก template ตามงาน |
-| **03** | [`03_ai-verify-guide.md`](03_ai-verify-guide.md) | วิธีแยกผู้เขียน/ผู้ตรวจ — ห้ามให้ AI ตรวจงานตัวเอง + checklist | หลัง AI ทำเสร็จ — ก่อน commit |
-| **04** | [`04_SESSION_LIFECYCLE.md`](04_SESSION_LIFECYCLE.md) | แผนการแบ่ง Session AI: เมื่อไหร่คุยต่อแชทเดิม/เมื่อไหร่ขึ้นแชทใหม่ + วิธีใช้ handoff | วางแผนรอบการทำงาน (Planning / Coding / BugFix) |
+| **01** | [`01_AI_WORKFLOW.md`](01_AI_WORKFLOW.md) | Flow หลัก (Plan → Spec → Tickets → Code) + **วิธีเริ่มงาน 5 สถานการณ์พร้อม Text Flow & Prompt สำเร็จรูป** | ⭐ **ก่อนเริ่มงานทุกครั้ง** — บังคับอ่าน (One-Stop Guide) |
+| **02** | [`02_ai-verify-guide.md`](02_ai-verify-guide.md) | วิธีแยกผู้เขียน/ผู้ตรวจ — ห้ามให้ AI ตรวจงานตัวเอง + Checklist ความปลอดภัย | หลัง AI ทำเสร็จ — ก่อน commit |
+| **03** | [`03_SESSION_LIFECYCLE.md`](03_SESSION_LIFECYCLE.md) | รายละเอียดเชิงลึกการแบ่ง Session AI: เมื่อไหร่คุยต่อแชทเดิม / เมื่อไหร่ขึ้นแชทใหม่ | วางแผนรอบการทำงาน (Context Management) |
 
 ## 🔁 Flow การใช้เอกสาร (สรุป)
 
 ```
-1. อ่าน 01_AI_WORKFLOW.md      → รู้วิธีเริ่มงานตามสถานการณ์ (ใหม่/กลาง/ค้าง/เก่า)
-2. ดู 04_SESSION_LIFECYCLE.md  → รู้วิธีตัดรอบ Session (Planning แชทเดียว, Implement แยกทีละตั๋ว)
-3. เลือก 02_prompt-templates.md → เอา template ไปใช้กับงาน (พร้อม skill)
-4. หลัง AI ทำเสร็จ            → อ่าน 03_ai-verify-guide.md → ตรวจแบบแยกผู้ตรวจ + checklist
+1. เปิด 01_AI_WORKFLOW.md   → ดูกรณีที่ตรงกับงาน (1-5) แล้วก๊อปปี้ Prompt ไปใช้
+2. ดู 03_SESSION_LIFECYCLE.md → เช็ควิธีตัดรอบ Session (Planning แชทเดียว, Implement แยกทีละตั๋ว)
+3. หลัง AI ทำเสร็จ          → อ่าน 02_ai-verify-guide.md → ตรวจแบบแยกผู้ตรวจ + checklist
 ```
 
 ## 📚 เอกสารอื่นในโปรเจกต์ (อ้างอิงเสริม)
@@ -26,9 +24,9 @@
 | ตำแหน่ง | เนื้อหา |
 |---|---|
 | `../AGENTS.md` | ภาพรวมโปรเจกต์ marsh (อ่านก่อนทุกอย่างเหมือนเดิม) |
-| `../rules/` | Coding rules แยกตาม stack (go/typescript/python/devops) |
-| `../skills/` | Project skills (implement-*) + รายการ global skills |
-| `../intercept/` | เอกสาร RTK — กลไก intercept/bีบอัด output (ดู `intercept/README.md`) |
+| `../rules/` | Coding rules แยกตาม stack (go/typescript/python/devops) — Single Source of Truth สำหรับโค้ด |
+| `../skills/` | รายการ Core Global skills (10 ตัว) |
+| `../intercept/` | เอกสาร RTK — กลไก intercept/บีบอัด output (ดู `intercept/README.md`) |
 
 ---
 

@@ -7,7 +7,7 @@ Personal dev knowledge base + AI coding-rules collection. **Not a software proje
 - `rules/` — the main deliverable: reusable AI coding rules split into `{language}-{scope}/` folders (`go-shared`, `go-rest-api`, `go-microservice`, `typescript-shared`, `typescript-backend`, `typescript-frontend-react`, `python-rest-api`, `devops`). Each folder has numbered `NN_Name.md` files.
 - `rules/README.md` — how rules get consumed (copied into a project's `.opencode/rules/`, concatenated into `AGENTS.md`/`CLAUDE.md`, or referenced via `opencode.json` `"rules"` array) and how to add new ones. **Read before editing rules.**
 - `lint/` — linter config references extracted from real projects: `lint/{go,python,typescript}.md` (golangci-lint v2, ESLint 9, ruff).
-- `skills/opencode-skills.md` — inventory of installed OpenCode skills (15).
+- `skills/opencode-skills.md` — inventory of installed Core OpenCode skills (10).
 - `docs/01_AI_WORKFLOW.md` — the owner's plan → spec → ARCHITECTURE.md → AGENTS.md → phase-based implementation workflow (per-module commits via jj). Read before anything about workflow/spec conventions.
 - `ERP-AI-ROADMAP.md` — roadmap for the Versus Thailand ERP + AI chatbot project.
 - `README.md` — owner's tech profile; the source of the stack conventions that `rules/` encodes.

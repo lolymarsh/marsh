@@ -34,48 +34,219 @@
 
 ---
 
-## เริ่มงานตามสถานการณ์โปรเจกต์ (4 กรณี) + Skill Map
+## เริ่มงานตามสถานการณ์โปรเจกต์ (5 กรณี) + Skill Text Flow
 
-| สถานการณ์ | สิ่งแรกที่ต้องทำ | Skills ที่แนะนำให้เรียกใช้ | เอกสารที่ต้องสร้าง/ใช้ |
-|---|---|---|---|
-| **1. เริ่มโปรเจกต์ใหม่** | สัมภาษณ์ความต้องการ → วาง Spec + Rules | `/grill-me` → `/to-spec` → `/to-tickets` → `/tdd` → `/code-review` | ✅ spec เต็ม (plan + phases + AGENTS.md) |
-| **2. เข้าไปกลางโปรเจกต์** (มีโค้ดแล้ว บางส่วนเสร็จ) | สำรวจภาพรวม + ห้ามเขียนทับโค้ดเดิม | `/improve-codebase-architecture` (สำรวจ) → `/to-tickets` (ซอยงานที่เหลือ) | ⚠️ mini-spec ต่อ feature (1 หน้า) |
-| **3. โปรเจกต์ค้าง กลับมาทำต่อ** (ยังไม่จบ) | เช็คสถานะปัจจุบัน vs spec เดิม | `/ask-matt` (หา flow) → `/handoff` (สรุป context ต่อช่วง) | ⚠️ checklist สถานะปัจจุบัน (`status.md`) |
-| **4. โปรเจกต์เก่า เข้าไปแก้** (production / bug) | หา Root Cause + ห้ามแตะส่วนอื่น | `/diagnosing-bugs` (วิเคราะห์) → `/tdd` (เขียน failing test) → `/code-review` | ❌ ไม่ต้อง spec (ใช้ failing test + prompt เจาะจง) |
+---
 
-### กรณี 1: เริ่มโปรเจกต์ใหม่ (The Main Flow)
-1. **สัมภาษณ์ & สรุปความต้องการ**: ใช้ `/grill-me` หรือ `/grill-with-docs` ให้ AI ยิงคำถามเพื่อเคลียร์ความคลุมเครือ
-2. **สร้าง Spec & Baseline**: สังเคราะห์เป็น spec ด้วย `/to-spec` และสร้าง `ARCHITECTURE.md` + `AGENTS.md`
-3. **แตกงานย่อย**: สั่ง `/to-tickets` ซอยเป็น tracer-bullet tasks เล็กๆ
-4. **Implement**: ทำทีละ ticket ด้วย `/implement` หรือ `/tdd` (Red-Green-Refactor)
-5. **Review & Commit**: รัน `/code-review` ตรวจ 2 มิติ (Spec Match + Architecture Standard) ก่อน commit
+### กรณี 1: เริ่มโปรเจกต์ใหม่ / ฟีเจอร์ใหม่ (The Main Flow)
 
-### กรณี 2: เข้าไปกลางโปรเจกต์ (มีโค้ดอยู่แล้ว)
-1. **สำรวจสถาปัตยกรรมเดิม**: รัน `/improve-codebase-architecture` ให้ AI วิเคราะห์โครงสร้างและ pattern เดิม
-2. **เช็คสถานะ**: ดูว่าอะไรเสร็จแล้ว อะไรค้างอยู่ (จาก code, TODOs, commits)
-3. **Mini-spec & Tickets**: เขียน mini-spec 1 หน้า หรือใช้ `/to-tickets` สำหรับ feature เฉพาะที่ต้องทำ
-4. **Implement ทีละนิด**: ทำตาม mini-spec → รัน `/code-review` เทียบกับโค้ดเดิม → commit
-5. **ข้อควรระวัง**: ห้ามให้ AI "เดาและทำต่อเอง" โดยไม่สแกนโครงสร้างเดิมก่อน
+```
+[🟢 Session 1: Planning (คุยต่อในแชทเดิม)]
+  ไอเดียใหม่ / Business Requirement
+       │
+       ▼
+  1. /grill-me ──────────────► AI สัมภาษณ์เจาะลึก Edge Cases & Trade-offs
+       │
+       ▼
+  2. /to-spec ───────────────► สรุปเป็น spec/plan.md + spec/YYYY-MM-DD_[track]/[NN].md
+       │
+       ▼
+  3. สร้าง Baseline ──────────► วาง ARCHITECTURE.md + AGENTS.md (ดึงกฎจาก rules/)
+       │
+       ▼
+  4. /to-tickets ────────────► แตกเป็นตั๋ว tracer tickets ลงใน tickets/
+       │
+       ▼
+  5. jj describe -m "spec: initial plan, architecture and tickets"
+       │
+═══════╪═══════════════════════════════════════════════════════════════════════
+       ▼ 🎯 จบ Session 1 — [ ปิดแชทเดิม / เปิดแชทใหม่ ]
+═══════╪═══════════════════════════════════════════════════════════════════════
+       │
+[🔵 Session 2..N: Implement ราย Ticket (1 Ticket = 1 Session)]
+  1. เปิดแชทใหม่: "อ่าน AGENTS.md และทำตาม ticket: tickets/.../01_task.md ด้วย tdd"
+       │
+       ▼
+  2. /tdd ───────────────────► เขียน Failing Test ก่อน → Implement โค้ดจนผ่าน
+       │
+       ▼
+  3. /code-review ───────────► ตรวจสอบ Spec Match + Standards
+       │
+       ▼
+  4. jj describe -m "feat(module): ticket description" ──► [ จบ Session ]
+```
 
-### กรณี 3: โปรเจกต์ค้าง กลับมาทำต่อ
-1. **ฟื้น Context**: อ่าน spec/plan เดิม หรือใช้ `/handoff` เพื่อดูสรุปช่วงการทำงาน
-2. **สร้างสถานะปัจจุบัน**: สร้าง checklist: ✅ เสร็จแล้ว / 🔄 กำลังทำ / ⬜ ยังไม่ทำ
-3. **ตรวจสอบความสอดคล้อง**: เช็คว่าโค้ดจริงกับ spec เดิมตรงกันไหม ถ้าไม่ตรงให้อัปเดต spec ก่อน
-4. **ทำต่อทีละ Ticket**: แตกงานย่อยต่อจากจุดที่ค้างด้วย `/to-tickets`
-5. **ส่งต่องาน**: เมื่อจบรอบการทำงาน ให้เรียก `/handoff` สรุปสถานะทิ้งไว้สำหรับ session ถัดไป
+#### 📋 Prompt สำเร็จรูป (ก๊อปปี้ไปใช้ได้ทันที):
+* **Step 1 (Grill)**:
+  ```text
+  ใช้ grill-me:
+  อยากทำระบบ/ฟีเจอร์ [ชื่อเรื่อง]
+  บริบท: เป้าหมาย [รายละเอียด], Stack [เช่น Go + Echo / React + Vite], ขอบเขต [โมดูลหลัก]
+  ช่วยซักถาม/สัมภาษณ์ผมแบบเจาะลึกเพื่อเก็บ Requirement และ Edge Cases ทั้งหมดก่อนเริ่มทำ Spec
+  ```
+* **Step 2 (To Spec)**:
+  ```text
+  ใช้ to-spec:
+  สรุปทั้งหมดลง spec/plan.md และแยกไฟล์โมดูลลง spec/YYYY-MM-DD_[track]/NN_[MODULE].md ตาม convention
+  ```
+* **Step 3 (To Tickets)**:
+  ```text
+  ใช้ to-tickets:
+  ช่วยแตก tracer tickets จากไฟล์ spec/YYYY-MM-DD_[track]/[NN_MODULE].md ลงโฟลเดอร์ tickets/YYYY-MM-DD_[track]/
+  ```
 
-### กรณี 4: โปรเจกต์เก่า เข้าไปแก้ (Production / Bug Fix / Legacy)
-1. **เข้าใจ Root Cause ก่อน**: เรียก `/diagnosing-bugs` ให้ AI สืบหาต้นตออย่างเป็นระบบ ห้ามแก้ตามอาการ
-2. **เขียน Failing Test ดักก่อน**: รัน `/tdd` เขียน test เคสที่พังเพื่อยืนยันว่าเกิดบั๊กจริง
-3. **แก้เฉพาะจุด (Isolated Fix)**: ให้ AI แก้โค้ดจน failing test ผ่าน โดยสั่งห้าม refactor ส่วนอื่น
-4. **Regression & Security Check**: รัน test ทั้งหมด + รัน `/code-review` เช็คว่ากระทบจุดอื่นไหม
-5. **Commit**: `jj describe -m "fix(module): bug explanation"`
+---
 
-**หลักคิดรวมทุกกรณี:**
-- สเปกคือ "สัญญากับ AI" — ใหญ่แค่ไหน ขึ้นกับขนาดงาน ไม่ใช่ทุกงานต้อง spec เต็ม
-- ก่อน AI เขียนอะไร → ต้องรู้สถานะปัจจุบันของโปรเจกต์ก่อนเสมอ
-- งานบั๊ก/งานแก้จุดเล็ก $\rightarrow$ `/diagnosing-bugs` + `/tdd`
-- งานฟีเจอร์ใหม่/งานใหญ่ $\rightarrow$ The Main Flow (`/grill-me` $\rightarrow$ `/to-spec` $\rightarrow$ `/to-tickets` $\rightarrow$ `/implement` $\rightarrow$ `/code-review`)
+### กรณี 2: ฟีเจอร์เดิมเปลี่ยน Flow / เปลี่ยน Requirement
+
+```
+[🟢 Session 1: Update Spec & Tickets]
+  โจทย์เปลี่ยน Flow (เช่น รวม API อัปโหลดรูป + เพิ่ม Turnstile)
+       │
+       ▼
+  1. อัปเดต Spec เดิม ────────► ส่ง Prompt แก้ไขไฟล์ spec/.../NN_MODULE.md (In-place)
+       │
+       ▼
+  2. /to-tickets ────────────► AI แตกตั๋วงานย่อยชุดใหม่ลงใน tickets/
+       │
+       ▼
+  3. jj describe -m "spec: update upload flow to single endpoint with turnstile"
+       │
+═══════╪═══════════════════════════════════════════════════════════════════════
+       ▼ 🎯 จบ Session วางแผน — [ ปิดแชทเดิม / เปิดแชทใหม่ ]
+═══════╪═══════════════════════════════════════════════════════════════════════
+       │
+[🔵 Session 2..N: Implement ตั๋วใหม่]
+  1. เปิดแชทใหม่: สั่งทำตั๋วใหม่ด้วย skill: tdd
+  2. /tdd ───────────────────► แก้ไข Test เดิมให้ตรง Flow ใหม่ (Test จะ Red) → แก้โค้ดจน Green
+  3. /code-review ───────────► ตรวจสอบความถูกต้อง → jj commit
+```
+
+#### 📋 Prompt สำเร็จรูป (ก๊อปปี้ไปใช้ได้ทันที):
+```text
+อัปเดตไฟล์ spec/YYYY-MM-DD_[track]/[NN_MODULE].md:
+
+เรามีการเปลี่ยน Flow การทำงานในโมดูลนี้:
+- Flow เดิม: [เช่น แยก endpoint อัปโหลดรูป กับ บันทึกข้อมูล]
+- Flow ใหม่ที่ต้องการ: [เช่น รวมเป็น endpoint เดียวผ่าน Multipart/form-data + ใส่ Turnstile validation]
+- เหตุผล: [เช่น ป้องกัน bot และลด network round-trip]
+
+สิ่งที่ต้องแก้ในไฟล์ spec เดิม:
+1. ปรับปรุง Schemas, API Endpoints และ Acceptance Criteria ในไฟล์ spec เดิม (ห้ามสร้างไฟล์ใหม่)
+2. เสร็จแล้วใช้ to-tickets แตกตั๋วงานย่อยชุดใหม่ลงใน tickets/YYYY-MM-DD_[track]/
+```
+
+---
+
+### กรณี 3: งานแก้บั๊ก / Hotfix / ปัญหา Production
+
+```
+[🔴 Session เฉพาะกิจ (Clean Context 100% — ไม่ต้องทำ Spec)]
+  พบอาการบั๊ก / Error Log จาก Production
+       │
+       ▼
+  1. /diagnosing-bugs ───────► วิเคราะห์ Root Cause หาต้นตอของปัญหา (ห้ามแก้เดาสุ่ม)
+       │
+       ▼
+  2. /tdd ───────────────────► เขียน Failing Test ดักจับบั๊ก (ยืนยันว่าพังจริงก่อนแก้)
+       │
+       ▼
+  3. แก้ไขเฉพาะจุด ────────────► AI แก้ไขโค้ดจน Failing Test ผ่าน (ห้ามแตะไฟล์นอก scope)
+       │
+       ▼
+  4. /code-review ───────────► รัน Regression Test + ตรวจสอบ Side-effects
+       │
+       ▼
+  5. jj describe -m "fix(module): root cause and bug explanation" ──► [ จบงาน ]
+```
+
+#### 📋 Prompt สำเร็จรูป (ก๊อปปี้ไปใช้ได้ทันที):
+```text
+ใช้ diagnosing-bugs + tdd:
+
+พบปัญหา/บั๊ก: [อาการ เช่น customer list กดเปลี่ยนหน้าแล้ว error 500 / build docker fail]
+ไฟล์/โมดูลที่เกี่ยวข้อง: [ถ้ารู้ ระบุที่นี่ พร้อมแนบ error log]
+
+ขั้นตอนที่ต้องการ:
+1. หา Root Cause ก่อน — วิเคราะห์ flow และ log ห้ามเดาสุ่มแก้ตามอาการ
+2. เขียน Failing Test ที่ reproduce บั๊กนี้ให้เห็นว่า fail จริง (กรณีโค้ดแอป)
+3. แก้ไขโค้ดเฉพาะจุดจนกว่า test จะผ่าน — ห้ามแตะต้องไฟล์นอก scope หรือ refactor ส่วนอื่น
+4. รัน Regression Test ทั้งหมด และสรุปผล: Root Cause คืออะไร + แก้ที่ไหน
+```
+
+---
+
+### กรณี 4: เข้าไปแทรกงานกลางโปรเจกต์ / โค้ดคนอื่น
+
+```
+[🟢 Session 1: สำรวจสถาปัตยกรรม & แตกตั๋ว]
+  เข้าไปโปรเจกต์ที่มีโค้ดอยู่แล้วบางส่วน
+       │
+       ▼
+  1. สำรวจโค้ดเดิม ───────────► ให้ AI อ่านโครงสร้าง + เอกสารเดิม ห้ามเขียนทับโค้ด
+       │
+       ▼
+  2. ทำ Mini-spec ───────────► สรุปสโคปเฉพาะฟีเจอร์ที่ต้องต่อเติม (1 หน้า)
+       │
+       ▼
+  3. /to-tickets ────────────► แตกตั๋วงานย่อยที่ต้องทำต่อ
+       │
+═══════╪═══════════════════════════════════════════════════════════════════════
+       ▼ 🎯 จบการสำรวจ — [ ปิดแชทเดิม / เปิดแชทใหม่ ]
+═══════╪═══════════════════════════════════════════════════════════════════════
+       │
+[🔵 Session 2..N: Implement]
+  รันทีละ Ticket ด้วย /tdd → /code-review → jj commit
+```
+
+#### 📋 Prompt สำเร็จรูป (ก๊อปปี้ไปใช้ได้ทันที):
+```text
+สำรวจโปรเจกต์นี้ก่อน:
+1. อ่านโครงสร้างโค้ด, README, และ AGENTS.md แล้วสรุป architecture ให้ฟัง
+2. เราจะเพิ่มฟีเจอร์: [ชื่อฟีเจอร์ เช่น export excel]
+3. ช่วยเขียน mini-spec 1 หน้าลงใน spec/YYYY-MM-DD_track/NN_[FEATURE].md และแตกเป็น tickets ด้วย to-tickets
+(ห้ามแตะต้องหรือ refactor โค้ดเดิมที่มีอยู่แล้ว)
+```
+
+---
+
+### กรณี 5: โปรเจกต์ค้าง กลับมาทำต่อ / ส่งต่องานข้ามกะ
+
+```
+[🧰 จบรอบงานเดิม / Context ใกล้เต็ม]
+  1. /handoff ───────────────► สร้าง docs/handoff-[YYYY-MM-DD].md สรุปสิ่งที่เสร็จ + สิ่งที่ค้าง
+       │
+═══════╪═══════════════════════════════════════════════════════════════════════
+       ▼ 🎯 พักรอบงาน — [ ปิดแชทเดิม ]
+═══════╪═══════════════════════════════════════════════════════════════════════
+       │
+[🔵 เริ่มรอบงานใหม่ (Session ใหม่)]
+  2. เปิดแชทใหม่ ────────────► สั่ง: "อ่าน handoff.md และ AGENTS.md แล้วทำต่องานข้อถัดไป"
+  3. รันด้วย /tdd ────────────► ทำงานต่อได้ทันทีโดย Context ไม่บวมและไม่หลุดบริบท
+```
+
+#### 📋 Prompt สำเร็จรูป (ก๊อปปี้ไปใช้ได้ทันที):
+* **ตอนจบรอบ (Handoff)**:
+  ```text
+  ใช้ handoff:
+  สรุปสถานะงานปัจจุบันลง docs/handoff-[YYYY-MM-DD].md: อะไรเสร็จแล้ว, อะไรค้างอยู่, Next Step ต้องทำอะไรต่อ
+  ```
+* **ตอนเปิดแชทใหม่ทำต่อ**:
+  ```text
+  อ่าน docs/handoff-[YYYY-MM-DD].md และ AGENTS.md แล้วทำงานในข้อ Next Step ถัดไป ด้วย skill: tdd
+  ```
+
+---
+
+## 📌 สรุปกฎเหล็ก (Rule of Thumb) — งานแบบไหนต้องทำอะไร
+
+| ประเภทงาน | ตัวอย่างงาน | ต้องทำ Spec มั้ย? | Session ที่ใช้ | Skills หลักที่ใช้ |
+|---|---|---|---|---|
+| **1. เริ่มโปรเจกต์ใหม่ / ฟีเจอร์ใหม่** | ระบบ Auth, Customer CRUD, Chatbot | ✅ **ทำ Spec เต็ม** (`spec/...`) | 🟢 Session 1 (Plan) → 🔵 Session 2..N (Code) | `/grill-me` → `/to-spec` → `/to-tickets` → `/tdd` |
+| **2. ฟีเจอร์เดิมเปลี่ยน Flow** | รวม API อัปโหลดรูป, เพิ่ม Turnstile | 🔄 **อัปเดตทับ Spec เดิม** | 🟢 Session Update Spec → 🔵 Session Code | `to-spec` (in-place) → `/to-tickets` → `/tdd` |
+| **3. งานแก้บั๊ก / Hotfix** | บั๊ก 500, ข้อมูลไม่อัปเดต, Logic ผิด | ❌ **ไม่ต้องทำ Spec** | 🔴 Session แยก (Clean) | `/diagnosing-bugs` + `/tdd` (Failing test) |
+| **4. แทรกงานกลางโปรเจกต์ / โค้ดคนอื่น** | รับงานต่อ, เพิ่มโมดูลในระบบเดิม | ⚠️ **Mini-spec เฉพาะจุด** | 🟢 Session สำรวจ → 🔵 Session Code | `to-tickets` → `/tdd` → `/code-review` |
+| **5. งานค้าง / ส่งต่องานข้ามกะ** | Context เต็ม, ทำงานข้ามวัน | 🔄 **ใช้ handoff.md นำทาง** | 🧰 Session สรุป → 🔵 Session ใหม่ | `/handoff` → `/tdd` |
 
 ---
 
@@ -446,78 +617,36 @@ Step 7: phase 02 → code → commit → phase 03 → ... → phase 08
 
 Skills = reusable knowledge packages ที่ agent load ให้อัตโนมัติเมื่อเจองานที่ตรงกัน
 
-### Skills ที่ติดตั้งอยู่ (14 ตัว)
+### 🧰 Skill เสริมเฉพาะทางตาม Tech Stack (Tech Boosters)
 
-| Skill | ผู้พัฒนา | เหมาะกับ |
-|---|---|---|
-| find-skills | vercel-labs/skills | ค้นหา skill อื่นๆ |
-| frontend-design | anthropics/skills | ออกแบบ UI/Frontend |
-| tdd | mattpocock/skills | Test-Driven Development |
-| code-review | mattpocock/skills | Review โค้ด |
-| handoff | mattpocock/skills | ส่งต่องานระหว่าง agent |
-| diagnosing-bugs | mattpocock/skills | วิเคราะห์บั๊ก |
-| improve-codebase-architecture | mattpocock/skills | ปรับปรุงโครงสร้างโค้ด |
-| skill-creator | anthropics/skills | สร้าง skill เอง |
-| shadcn | shadcn/ui | UI components |
-| supabase-postgres-best-practices | supabase/agent-skills | Database PostgreSQL |
-| vercel-react-best-practices | vercel-labs/agent-skills | React/Next.js |
-| web-design-guidelines | vercel-labs/agent-skills | การออกแบบเว็บ |
-| webapp-testing | anthropics/skills | ทดสอบ web app |
-| **writing-plans** | **obra/superpowers** | **เขียนแผน/PRD** |
+สกิลกลุ่มนี้ AI จะ **โหลดให้อัตโนมัติ** ตามบริบทของงาน แต่ถ้าต้องการเรียกใช้แบบเจาะจง สามารถใช้ prompt สั้นๆ ดังนี้:
 
-### วิธีใช้ Skills
+#### 1. งาน Database / SQL Optimization (`supabase-postgres-best-practices`)
+* **เมื่อไหร่ที่ใช้**: ออกแบบตารางซับซ้อน, Query ช้า, หรือจะทำ Index/Partition
+* **Prompt**:
+  ```text
+  ใช้ supabase-postgres-best-practices:
+  ช่วยวิเคราะห์ query [ระบุ query] ทำไมถึงช้า ขอคำแนะนำ Index + Migration script ที่ปลอดภัย
+  ```
 
-**อัตโนมัติ** — agent จะ load skill ที่เกี่ยวข้องให้เองตาม context เช่น:
-```
-implement customer module with tests
-```
-→ agent เห็นว่า `tdd`, `supabase-postgres-best-practices` เกี่ยวข้อง → load ให้
+#### 2. งาน UI Components & Design System (`shadcn`)
+* **เมื่อไหร่ที่ใช้**: ติดตั้ง component ใหม่, หา UI pattern, หรือจัดการ styling
+* **Prompt**:
+  ```text
+  ใช้ shadcn:
+  เพิ่ม component [เช่น data-table, dialog, form] พร้อมตัวอย่างการใช้งานแบบ type-safe
+  ```
 
-**Manual** — reference ชื่อ skill ใน prompt ถ้าอยากบังคับใช้:
-```
-ใช้ tdd + supabase-postgres-best-practices: implement customer module
-```
-
-**ค้นหา** — ใช้ `find-skills` ถ้าอยากรู้ว่ามี skill ไหนเหมาะกับงาน:
-```
-ใช้ find-skills: หา skill ที่เหมาะกับการทำ API design
-```
-
-### Workflow การ Plan ด้วย Skills
-
-แทน Step 1-2 เดิม (dump idea → AI เขียน plan.md):
-
-**Step 1: Dump Idea + Skill Boost**
-```
-ใช้ writing-plans + to-prd:
-อยากทำระบบ erp สำหรับบริษัทติดตั้งแก๊สรถยนต์
-stack: react 19 + mui + tailwind / nodejs + express
-ช่วยวางแผนหน่อย
-```
-→ AI เขียน `plan.md` โดยใช้ `writing-plans` (โครงสร้างแผน) + `to-prd` (idea → spec)
-
-**Step 2: ต่อด้วย Architecture + Rules ปกติ**
-```
-ARCHITECTURE.md เลย
-ผมถนัด go ใช้ structure แบบนี้ [link go project]
-frontend ใช้ react mvc
-```
-
-### ตัวอย่างใน Workflow ปกติ
-
-**ไม่มี skill**:
-```
-implement phase 02 ตาม spec/02_CUSTOMERS.md
-```
-
-**มี skill hint**:
-```
-ใช้ tdd + supabase-postgres-best-practices:
-implement phase 02 ตาม spec/02_CUSTOMERS.md
-ตาม AGENTS.md rules + ARCHITECTURE.md patterns
-```
+#### 3. งาน Optimize Frontend / React Performance (`vercel-react-best-practices`)
+* **เมื่อไหร่ที่ใช้**: หน้าเว็บโหลดช้า, มี Re-render ซ้ำซ้อน, หรือสลับ Client/Server Component
+* **Prompt**:
+  ```text
+  ใช้ vercel-react-best-practices:
+  ช่วย Audit หน้านี้เพื่อลด bundle size และ optimize การ fetch ข้อมูลใน Server Component
+  ```
 
 ---
 
-> **Last Updated**: 2026-07-30
-> **Next**: เริ่ม implement ตาม AGENTS.md — เริ่มจาก database schema → auth module
+> **Tip สรุป**:
+> - **Main Flow** (`grill-me` → `to-spec` → `to-tickets` → `tdd` → `code-review`) = ตัวคุมรอบการทำงาน (Workflow)
+> - **Tech Boosters** (`shadcn`, `supabase-postgres`, `vercel-react`) = คลังความรู้คอยเสริมให้โค้ดคุณภาพสูงขึ้นอัตโนมัติ
