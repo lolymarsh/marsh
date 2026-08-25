@@ -12,6 +12,7 @@ Personal dev knowledge base + AI coding-rules collection. **Not a software proje
   - `docs/01_AI_WORKFLOW.md` — **One-Stop Guide**: The Main Flow (`/grill-me` → `/to-spec` → `/to-tickets` → `/tdd` → `/code-review`), Text Flow และ Prompt สำเร็จรูปครบทั้ง 5 สถานการณ์.
   - `docs/02_ai-verify-guide.md` — การตรวจงานแบบแยกผู้เขียน/ผู้ตรวจ และ Checklist ความปลอดภัย.
   - `docs/03_SESSION_LIFECYCLE.md` — การบริหารจัดการ Context & การตัดรอบ Session AI (1 Ticket = 1 Session).
+  - `docs/04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md` — **Solo Fullstack Dev Guide**: End-to-End Workflow สำหรับงาน Internal Tools (รับโจทย์ลอยๆ → Grill คุย Business Logic → TDD → เอกสารส่งมอบ & รายงานผู้บริหาร).
 - `ERP-AI-ROADMAP.md` — roadmap for the Versus Thailand ERP + AI chatbot project.
 - `README.md` — owner's tech profile; the source of the stack conventions that `rules/` encodes.
 

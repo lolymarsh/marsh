@@ -603,6 +603,7 @@ Step 7: phase 02 → code → commit → phase 03 → ... → phase 08
    - ยิงทดสอบ DAST (ถ้าเป็น Backend API)
 
 📖 *ดูคู่มือฉบับเต็มและคำสั่งติดตั้งได้ที่: `tools/security-scanning.md`*
+📖 *ดูคู่มือการทำงานแบบ Solo Dev สำหรับ Internal Tools & Business Workflow: `docs/04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md`*
 
 ---
 
