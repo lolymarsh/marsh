@@ -1,278 +1,198 @@
-# Prompt Templates — ใช้คู่กับ Skills ที่ติดตั้งไว้
+# 02_prompt-templates.md — Prompt Templates สำเร็จรูป (Core 7 Templates)
 
-> รวม prompt template สำหรับงานแต่ละประเภท พร้อมแมปกับ **skill** ที่ควรใช้
-> (ทั้ง 4 project skills + 15 global skills ที่ ~/.agents/skills/)
->
-> **วิธีใช้**: คัดลอก template → เติม `[วงเล็บเหลี่ยม]` → ส่งให้ AI
-> ถ้าอยากบังคับใช้ skill ให้ **เอ่ยชื่อ skill ใน prompt** ตาม format ข้างล่าง
+> รวม Prompt Templates หลักที่จำเป็น แมปกับ **Core 10 Skills** และ Session Lifecycle 
+> 
+> **วิธีใช้**: คัดลอก template → แก้ไขข้อความใน `[วงเล็บเหลี่ยม]` → ส่งให้ AI
 
 ---
 
-## 0. ตารางเลือก skill ให้ตรงกับงาน (อ่านก่อน!)
+## 📌 ตารางเลือก Template ตามงาน
 
-| งาน | Skill ที่ใช้ | Template # |
-|---|---|---|
-| เขียนแผน/PRD ใหม่ | `writing-plans` + `to-spec` | #1 |
-| Implement Go REST API | `implement-go-restapi` | #2 |
-| Implement React (Vite MVC) | `implement-fe-react` + `vercel-react-best-practices` | #3 |
-| Implement Next.js (App Router) | `implement-fe-nextjs` + `vercel-react-best-practices` | #4 |
-| Implement Python FastAPI | `implement-python-restapi` | #5 |
-| แก้บั๊ก (debug) | `diagnosing-bugs` + project skill ตาม stack | #6 |
-| Review โค้ด / ตรวจงาน AI | `code-review` (แยกผู้ตรวจ read-only) | #7 |
-| เก็บข้อมูล/ส่งต่องานระหว่าง session | `handoff` | #8 |
-| ออกแบบ UI/ปรับหน้าตา | `frontend-design` + `web-design-guidelines` + `shadcn` | #9 |
-| งาน PostgreSQL/SQL | `supabase-postgres-best-practices` | #10 |
-| ทำ TDD เข้มๆ | `tdd` (ใช้คู่กับทุก implement template) | ใช้เป็น prefix |
-| ปรับปรุงสถาปัตยกรรม | `improve-codebase-architecture` | #11 |
-| อยากได้ skill เพิ่ม | `find-skills` | — |
-
-**Format การบังคับใช้ skill** (เพิ่มไว้ต้น prompt):
-```
-ใช้ [skill-name]:
-<งานที่ต้องการ>
-```
+| Phase | # | งานที่ต้องการทำ | Skills ที่ใช้ | ใช้ใน Session ไหน |
+|---|---|---|---|---|
+| **Plan** | **#1** | สัมภาษณ์ → สร้าง Spec → แตกตั๋ว | `grill-me` + `to-spec` + `to-tickets` | 🟢 Session 1 (Planning) |
+| **Code** | **#2** | ทำตั๋วงานย่อยด้วย TDD (ราย Ticket) | `tdd` | 🔵 Session 2..N (1 Ticket = 1 Session) |
+| **Code** | **#3** | Implement เจาะจง Stack (Go / React / Python) | `rules/*` + `vercel-react-best-practices` | 🔵 Session 2..N (เมื่อไม่มีตั๋วแยก) |
+| **Verify** | **#4** | Review โค้ด 2 มิติ (Spec + Standards) | `code-review` | 🔵 ท้าย Session ก่อน Commit |
+| **Support** | **#5** | แก้บั๊ก & สืบหา Root Cause | `diagnosing-bugs` + `tdd` | 🔴 Session แยก (Bug Fix) |
+| **Support** | **#6** | Handoff สรุปสถานะย่อข้าม Session | `handoff` | 🧰 เมื่อจบรอบงาน / context ใกล้เต็ม |
+| **Support** | **#7** | PostgreSQL Schema & Query Optimization | `supabase-postgres-best-practices` | 🔵 เมื่อทำงานเกี่ยวกับ DB |
 
 ---
 
-## #1 — วางแผน & สร้าง Spec ตามโครงสร้างโปรเจกต์ (grill-me + to-spec)
+## #1 — วางแผน → สร้าง Spec → แตก Tickets (The Main Flow)
 
-### ขั้นตอนที่ 1: สัมภาษณ์ความต้องการ (Grill)
+> 🟢 **รันใน Session 1 (คุยต่อเนื่องในแชทเดิม)**
+
+### Step 1.1: สัมภาษณ์ความต้องการ (Grill)
 ```text
 ใช้ grill-me:
 
-อยากทำระบบ [ชื่อโปรเจกต์/ฟีเจอร์]
+อยากทำระบบ/ฟีเจอร์ [ชื่อเรื่อง]
 บริบท:
 - เป้าหมาย: [อยากได้อะไร สำหรับใคร แก้ปัญหาอะไร]
-- Stack: [เช่น Go + Echo + MySQL / React 19 + Vite + TS]
+- Stack: [เช่น Go + Echo + PostgreSQL / React 19 + Vite + TS]
 - ขอบเขต: [เช่น Core modules: Auth, Customer, Invoice]
-- ข้อจำกัด: [เช่น ไม่มี deploy เอาไว้ศึกษา / ใช้ MySQL แทน Postgres]
+- ข้อจำกัด: [เช่น ไม่มี deploy เอาไว้ศึกษา / ใช้ Zod validate ทุกชั้น]
 
 ช่วยซักถาม/สัมภาษณ์ผมแบบเจาะลึกเพื่อเก็บ Requirement, Edge Cases และ Trade-offs ทั้งหมดก่อนเริ่มทำ Spec
 ```
 
----
-
-### ขั้นตอนที่ 2: สังเคราะห์เป็น Spec หลายไฟล์ตามโครงสร้าง (To Spec)
+### Step 1.2: สังเคราะห์เป็น Spec แยกโฟลเดอร์ (To Spec)
 ```text
 ใช้ to-spec:
 
-สรุปข้อตกลงและรายละเอียดทั้งหมดที่คุยกันลงโฟลเดอร์ spec ตาม convention ของเรา:
-
-1. สร้าง spec/plan.md (Master Plan ภาพรวม 1 หน้า: Modules, Timeline, Architecture)
+สรุปข้อตกลงทั้งหมดลงโฟลเดอร์ spec ตาม convention:
+1. สร้าง spec/plan.md (Master Plan ภาพรวม 1 หน้า)
 2. สร้างโฟลเดอร์ track: spec/YYYY-MM-DD_[track_name]/
 3. แยกไฟล์ spec ตามโมดูลย่อย (ห้ามรวมเป็นไฟล์เดียว):
    - spec/YYYY-MM-DD_[track]/01_FOUNDATION.md
    - spec/YYYY-MM-DD_[track]/02_[MODULE_NAME].md
-   - ...
+   ...
 
-โครงสร้างภายในแต่ละไฟล์โมดูลย่อย:
-- 1. Scope & Out of Scope (สิ่งที่ทำ / สิ่งที่ไม่ทำ)
-- 2. Data Flow & Schemas (DB Table / DTO / Zod Schema)
-- 3. API Endpoints หรือ UI Components ที่ต้องมี
-- 4. Acceptance Criteria (Checklist ตรวจสอบ)
-- 5. Verification Commands (คำสั่งรันเทส)
+แต่ละไฟล์ต้องมี: Scope, Schemas/Data Flow, API/UI Components, Acceptance Criteria และ Verification Commands
 ```
 
-**ผลลัพธ์ที่ได้**: โครงสร้าง `spec/YYYY-MM-DD_<track>/NN_NAME.md` ครบถ้วน พร้อมนำไปสั่ง `/to-tickets` หรือ `/tdd` ต่อได้ทันที
+### Step 1.3: แตก Spec เป็น Tracer Tickets (To Tickets)
+```text
+ใช้ to-tickets:
+
+ช่วยแตกตั๋ว tracer tickets จากไฟล์ spec:
+spec/YYYY-MM-DD_[track]/[NN_MODULE].md
+
+ข้อกำหนด:
+1. แตกเป็น Vertical Slices (แต่ละตั๋วทำครบ Schema → API → UI → Test)
+2. ระบุ Blocked by ชัดเจน (ตั๋วไหนต้องทำก่อน-หลัง)
+3. บันทึกไฟล์ตั๋วลงโฟลเดอร์: tickets/YYYY-MM-DD_[track]/
+```
 
 ---
 
-## #2 — Implement Go REST API Module
+## #2 — Implement รายตั๋วด้วย TDD (1 Ticket = 1 Session)
+
+> 🔵 **เปิดแชทใหม่ (Clean Context 100%) ทุกครั้งที่เริ่ม Ticket ใหม่**
 
 ```text
-ใช้ implement-go-restapi:
+อ่าน AGENTS.md และทำตาม ticket:
+tickets/YYYY-MM-DD_[track]/[NN_TASK].md
 
-implement phase [NN] ตาม spec/[path]/[NN_NAME].md
-ตาม AGENTS.md rules + rules/go-rest-api/* + ARCHITECTURE.md patterns
+ใช้ skill: tdd
+
+ขั้นตอน:
+1. ทำความเข้าใจ Seam (Interface boundary) และ Acceptance Criteria ในตั๋ว
+2. เขียน Failing Test ดักจับพฤติกรรมก่อน (Red)
+3. เขียน Implementation โค้ดจนกว่า Test จะผ่าน (Green)
+4. รันคำสั่ง Verify ตามที่ระบุในตั๋ว + ตรวจ Lint/Typecheck
+5. เสร็จแล้วรัน /code-review ตรวจสอบความถูกต้อง
+```
+
+---
+
+## #3 — Implement Stack เจาะจง (เมื่อไม่ได้แตกตั๋ว)
+
+### 3.1 Go REST API
+```text
+ใช้ tdd:
+
+implement โมดูล [ชื่อโมดูล] ตาม spec/[path].md
+ตาม AGENTS.md rules + rules/go-rest-api/* + ARCHITECTURE.md
 
 สิ่งที่ต้องการ:
-- module: [เช่น customer] → internal/customer/ (entity, repo, service, handler, request, route)
-- test-first: เขียน integration test ที่ fail ก่อน (success + error + wrong role → 403)
+- internal/[module]/: entity, repo, service, handler, request, route
+- test-first: integration test (success + error + auth 403)
 - เดินสาย DI ใน internal/server/di.go
+- ห้ามละ pagination / version check / transaction
 
-ห้าม:
-- ใช้ concrete type ใน layer — ต้องเป็น interface
-- ละ pagination / version check / transaction
-
-เสร็จแล้วรันให้ครบแล้วรายงานผล: make fmt && make vet && make lint && go test ./...
+เสร็จแล้วรัน: make fmt && make vet && make lint && go test ./...
 ```
 
----
-
-## #3 — Implement React Feature (Vite + MVC)
-
+### 3.2 React (Vite MVC) / Next.js
 ```text
-ใช้ implement-fe-react + vercel-react-best-practices:
+ใช้ tdd + vercel-react-best-practices:
 
-implement feature [ชื่อ] ตาม spec/[path].md
-ตาม rules/typescript-frontend-react/* (React MVC pattern)
+implement ฟีเจอร์ [ชื่อฟีเจอร์] ตาม spec/[path].md
+ตาม rules/typescript-frontend-react/* (React MVC Pattern หรือ Next.js RSC)
 
 สิ่งที่ต้องการ:
-- modules/[domain]/: model.ts (API + types + Zod) → controller.ts (useXxx hook) → view.tsx (props only)
-- test-first: controller test mock API layer (vi.hoisted ก่อน vi.mock), view test mock hook
-- cover: success + error + empty/loading
+- modules/[domain]/: model.ts (API + Zod) → controller.ts (Hook) → view.tsx (Pure UI)
+- test-first: controller test mock API, view test mock hook
+- ห้ามใช้ `any` และห้าม view.tsx เรียก API ตรงๆ
 
-ห้าม:
-- model.ts import React / view.tsx เรียก API ตรงๆ
-- ใช้ any / as — ใช้ unknown + Zod .parse()
-
-เสร็จแล้วรัน: npm run typecheck && npm run lint && npm run format && npm run test
+เสร็จแล้วรัน: npm run typecheck && npm run lint && npm run test
 ```
 
 ---
 
-## #4 — Implement Next.js Feature (App Router)
+## #4 — Review โค้ด & ตรวจสอบคุณภาพ 2 มิติ
 
-```text
-ใช้ implement-fe-nextjs + vercel-react-best-practices:
-
-implement [หน้า/ฟีเจอร์] ตาม spec/[path].md
-ตาม rules/typescript-frontend-react/*
-
-สิ่งที่ต้องการ:
-- server components โดย default, "use client" เฉพาะที่จำเป็น (thin)
-- data fetching ใน RSC / server component — client components รับ props
-- forms: React Hook Form + Zod
-- loading.tsx + error.tsx สำหรับ route ที่ fetch ข้อมูล
-
-ห้าม:
-- fetch ใน client component
-- ใส่ secret/env ใน client (ยกเว้น NEXT_PUBLIC_*)
-
-เสร็จแล้วรัน: npm run lint && npx tsc --noEmit && npm run build && npm run test
-⚠️ npm run build สำคัญสุด — จับ RSC/SSR/hydration error ที่ lint/test ไม่เจอ
-```
-
----
-
-## #5 — Implement Python FastAPI Module
-
-```text
-ใช้ implement-python-restapi:
-
-implement module [ชื่อ] ตาม spec/[path].md
-ตาม rules/python-rest-api/*
-
-สิ่งที่ต้องการ:
-- src/[pkg]/domain/[module]/: entity.py, schema.py, repo.py, service.py + routes ใน api/[module].py
-- test-first: service test mock repo + API test ผ่าน AsyncClient
-- type hints ครบทุก param/return (ruff ANN + mypy strict)
-- cover: success + error + auth (401/403)
-
-ห้าม:
-- Optional[X] / List[X] — ใช้ X | None / list[X]
-- repository raise exception — return None สำหรับ not-found
-
-เสร็จแล้วรัน: ruff check src/ && ruff format src/ && mypy src/ && pytest --cov=src/ tests/
-```
-
----
-
-## #6 — แก้บั๊ก (Bug Fix)
-
-```text
-ใช้ diagnosing-bugs + [implement-go-restapi / implement-fe-react / ...]:
-
-มีบั๊ก: [อาการ เช่น customer list กดหน้าถัดไปแล้ว error 500 / ข้อมูลไม่อัปเดต]
-ที่ไฟล์: [ไฟล์/โมดูลที่เกี่ยวข้อง ถ้ารู้]
-
-ขั้นตอนที่ต้องการ:
-1. หา root cause ก่อน — วิเคราะห์ flow + อ่านโค้ดที่เกี่ยวข้อง อย่าเพิ่งแก้
-2. เขียน failing test ที่ reproduce บั๊ก ให้เห็นว่า fail จริง
-3. แก้ให้ test ผ่านเท่านั้น — ห้าม refactor อย่างอื่น / ห้ามแตะไฟล์นอก scope
-4. รัน regression ทั้งหมด + รายงาน: root cause + อะไรแก้ + test ไหนเพิ่ม
-
-ห้าม: แก้ตามอาการโดยไม่รู้ root cause / แก้กว้างเกิน scope
-```
-
----
-
-## #7 — Review โค้ด / ตรวจงาน AI (แยกผู้ตรวจ)
+> 🔵 **ใช้ตรวจงานก่อน Commit (แนะนำให้แยกเป็นคนละ Agent/Session กับคนเขียน)**
 
 ```text
 ใช้ code-review:
 
-ตรวจสอบงานล่าสุดแบบเป็นฝ่ายจับผิด (คุณไม่ใช่คนเขียน):
-1. เทียบกับ spec/[path].md ทีละข้อ — ทำครบจริงมั้ย
-2. หา bug/edge case: null / error path / race / auth
-3. รัน verify จริง: [คำสั่งตาม stack] แล้วรายงานผล
-4. ห้ามแก้โค้ด — รายงานเป็น list:
-   [CRITICAL]/[MAJOR]/[MINOR] + ไฟล์:บรรทัด + เหตุผล + วิธีแก้ที่แนะนำ
+ตรวจสอบโค้ดที่เพิ่งแก้ไขล่าสุดแบบเป็นฝ่ายจับผิด (คุณไม่ใช่คนเขียน):
+1. ตรวจสอบ Spec Match: เทียบกับ ticket หรือ spec/[path].md ว่าทำครบจริงไหม
+2. ตรวจสอบ Standards: ตรวจเทียบกับ AGENTS.md และ rules/*
+3. หาบั๊ก/Edge Cases: null check, error handling, race conditions, memory leaks
+4. รันคำสั่ง Verify จริงแล้วรายงานผล
+5. ห้ามแก้โค้ดเอง — ให้สรุปเป็นลิสต์ [CRITICAL] / [MAJOR] / [MINOR] พร้อมไฟล์:บรรทัด และวิธีแก้
 ```
-
-> ใช้คู่กับ `03_ai-verify-guide.md` — ผู้ตรวจต้องเป็นคนละ agent/session กับผู้เขียน
 
 ---
 
-## #8 — Handoff: เก็บสถานะ / ส่งต่องาน
+## #5 — แก้บั๊ก & สืบหา Root Cause (Bug Fix)
+
+> 🔴 **เปิด Session แยกเฉพาะกิจ (ห้ามรวมกับแชทฟีเจอร์)**
+
+```text
+ใช้ diagnosing-bugs + tdd:
+
+พบปัญหา/บั๊ก: [อาการ เช่น customer list กดเปลี่ยนหน้าแล้ว error 500]
+ไฟล์/โมดูลที่เกี่ยวข้อง: [ถ้ารู้ ระบุที่นี่]
+
+ขั้นตอนที่ต้องการ:
+1. หา Root Cause ก่อน — วิเคราะห์ Data Flow และอ่านโค้ด ห้ามเดาสุ่มแก้ตามอาการ
+2. เขียน Failing Test ที่ reproduce บั๊กนี้ให้เห็นว่า fail จริง
+3. แก้ไขโค้ดเฉพาะจุดจนกว่า test จะผ่าน — ห้ามแตะต้องไฟล์นอก scope หรือ refactor ส่วนอื่น
+4. รัน Regression Test ทั้งหมด และสรุปผล: Root Cause คืออะไร + แก้ที่ไหน + เพิ่ม Test อะไร
+```
+
+---
+
+## #6 — Handoff: เก็บสถานะ / ส่งต่องาน
+
+> 🧰 **ใช้เมื่อจบรอบการทำงาน, Context ใกล้เต็ม, หรือจะส่งต่องานให้อีก Agent**
 
 ```text
 ใช้ handoff:
 
-สรุปสถานะงานปัจจุบันเป็น handoff doc (docs/handoff-[วันที่].md):
-- งานที่ทำเสร็จแล้ว (พร้อม commit/phase)
-- งานที่กำลังทำ (ค้างตรงไหน อะไรยังไม่จบ)
-- งานถัดไปที่ต้องทำ (ตาม spec phase ไหน)
-- ไฟล์ที่เกี่ยวข้อง + traps/ข้อควรระวัง
-- ห้ามเอาโค้ด/diff มาแปะทั้งก้อน — สรุปเป็นข้อความ
+สรุปสถานะงานปัจจุบันเป็น handoff doc ลงไฟล์: docs/handoff-[YYYY-MM-DD].md
+- 1. งานที่ทำเสร็จแล้ว (พร้อม commit/ticket id)
+- 2. งานที่กำลังทำค้างอยู่ (ติดปัญหาตรงไหน อะไรยังไม่เสร็จ)
+- 3. งานถัดไปที่ต้องทำต่อ (Next Steps ตาม ticket ไหน)
+- 4. ข้อควรระวัง / traps ที่ค้นพบในรอบนี้
+- ห้ามแปะ diff โค้ดทั้งก้อน — ให้สรุปเป็นข้อความกระชับ
 
-session ถัดไปจะเปิดอ่านไฟล์นี้แทนการคุย history ทั้งหมด
+(Session ถัดไปจะเปิดอ่านไฟล์นี้เพื่อทำต่อได้ทันที)
 ```
 
 ---
 
-## #9 — ออกแบบ UI / ปรับหน้าตา
-
-```text
-ใช้ frontend-design + web-design-guidelines + shadcn:
-
-ออกแบบ/ปรับปรุง UI ของ [หน้า/component]:
-- เป้าหมาย: [เช่น เพิ่ม conversion / ทำให้อ่านง่าย / ตาม brand]
-- stack: [shadcn/ui + Tailwind + MUI]
-- โฟกัส: hierarchy, contrast, hover/micro-interaction, responsive
-- ขอให้ใช้ component ที่มีอยู่ก่อน ถ้าไม่มีค่อยสร้างใหม่ (ห้ามสร้างซ้ำ)
-```
-
----
-
-## #10 — งาน PostgreSQL / SQL
+## #7 — PostgreSQL Schema & Query Optimization
 
 ```text
 ใช้ supabase-postgres-best-practices:
 
-ช่วยเขียน/ปรับ query หรือ schema สำหรับ:
-- ตาราง/query: [เช่น dashboard ยอดขายรายเดือน]
-- ปัญหา: [เช่น ช้า / index ไม่โดน / N+1]
-- ขอ: EXPLAIN วิเคราะห์ + index ที่แนะนำ + migration SQL
+ช่วยออกแบบ/ปรับปรุง Query หรือ Schema สำหรับ:
+- ตาราง / งานที่ต้องการ: [เช่น ตาราง invoices หรือ query ยอดขายรายเดือน]
+- ปัญหา / เป้าหมาย: [เช่น query ช้า, ต้องการทำ partition, หรือหา index ที่เหมาะสม]
+- ขอ: ผลวิเคราะห์ EXPLAIN + คำแนะนำ Index + Migration SQL Script ที่ปลอดภัย
 ```
 
 ---
 
-## #11 — ปรับปรุงสถาปัตยกรรม
-
-```text
-ใช้ improve-codebase-architecture:
-
-สแกนโปรเจกต์นี้ หาโอกาสปรับปรุงสถาปัตยกรรม:
-1. สรุปจุดอ่อน/ความเสี่ยง (coupling, duplicated code, layer violation)
-2. จัดลำดับตาม impact กับ effort
-3. เลือก [อันที่ 1] → เสนอแผน refactor ทีละขั้น (เล็กลงจน commit ได้)
-4. ห้าม refactor ทันที — ขอแผนก่อน ผม approve แล้วค่อยทำ
-```
-
----
-
-## ⚠️ กฎการใช้ template (สำคัญ)
-
-1. **เอ่ยชื่อ skill ใน prompt** — นี่คือกลไกบังคับให้ agent โหลด skill (ไม่ใช่แค่ "ทำตามที่เขียน")
-2. **ทุก implement ต้อง test-first** — ถ้าไม่เห็นคำว่า failing test ใน template ให้เติมเอง
-3. **ทุกงานต้องมี verify** — คำสั่งท้าย template ห้ามตัด (lint/test/build คือเกราะจริง)
-4. **ห้าม AI ตรวจงานตัวเอง** — ใช้ #7 แยก session/agent เสมอ (ดู `03_ai-verify-guide.md`)
-5. **ปรับ stack ให้ตรงโปรเจกต์** — template #2–#5 เขียนตาม marsh rules ถ้าโปรเจกต์อื่นต่างจากนี้
-   ให้บอก AI ให้อ่าน AGENTS.md ของโปรเจกต์นั้นก่อน (ดู 01_AI_WORKFLOW.md → "เริ่มงานตามสถานการณ์โปรเจกต์")
-6. **skill บางตัวช่วยเลือกเองได้** — ถ้าไม่แน่ใจใช้ตัวไหน พิมพ์ "ใช้ find-skills: หา skill ที่เหมาะกับ [งาน]"
-
----
-
-> สร้าง: 2026-08-11 (Freebuff)
-> อ้างอิง: skills/ 4 project skills + ~/.agents/skills/ 15 global skills + 01_AI_WORKFLOW.md
+## ⚠️ กฎสำคัญ 4 ข้อในการใช้ Prompt Templates
+1. **เอ่ยชื่อ Skill เสมอ**: การใส่ `ใช้ <skill-name>:` ไว้ต้น prompt ช่วยกระตุ้นให้ AI ดึง Best Practice ประจำตัวมาใช้
+2. **Test-First เป็นวินัยหลัก**: ทุกการ Implement ต้องเขียน failing test ก่อนเริ่มเขียนโค้ดจริง
+3. **1 Ticket = 1 Session**: ปิดแชทเดิม เปิดแชทใหม่ทุกครั้งที่ขึ้นตั๋วงานใหม่
+4. **แยกผู้เขียนกับผู้ตรวจ**: ตอนรัน `#4 code-review` ให้ AI สวมบทบาทเป็น Reviewer ตรวจจับผิดอย่างเดียว
