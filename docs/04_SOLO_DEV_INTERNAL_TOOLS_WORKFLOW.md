@@ -110,8 +110,7 @@
 
 ### 1. วิธี Track งานและ Feature เมื่อทำหลายโปรเจกต์คู่ขนาน:
 ใช้ระบบไฟล์ Markdown หรือ Tool ง่ายๆ (เช่น Linear, Notion, GitHub Projects) โดยแบ่ง Track:
-- `spec/YYYY-MM-DD_[project-name]/` สำหรับ Spec แต่ละโปรเจกต์
-- `tickets/YYYY-MM-DD_[project-name]/` สำหรับ Checklist งานย่อย
+- `spec/[module]/` (เช่น `spec/core/01_plan.md`, `02_api.md`, `03_schema.md`, `04_ticket.md` หรือแยก `04_ticket01.md`, `04_ticket02.md` ถ้างานเยอะ) รวมจบในโฟลเดอร์เดียว ไม่ต้องสร้างโฟลเดอร์ tickets แยก
 
 ### 2. เทมเพลตรายงานหัวหน้า / ผู้บริหาร (Weekly / Milestone Update):
 

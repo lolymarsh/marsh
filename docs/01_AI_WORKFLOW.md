@@ -122,7 +122,7 @@ Tech Stack ที่ต้องการใช้:
 #### 🔹 [Step 2: สังเคราะห์เป็น Spec]
 ```text
 ใช้ to-spec:
-สรุปข้อตกลงทั้งหมดลงใน spec/plan.md และแยกรายละเอียดย่อยลง spec/YYYY-MM-DD_[module]/01_SPEC.md โดยระบุ:
+สรุปข้อตกลงทั้งหมดลงใน spec/plan.md และแยกรายละเอียดย่อยลง spec/[module]/ (เช่น 01_plan.md, 02_api.md, 03_schema.md, 04_frontend.md) โดยระบุ:
 1. Topology Diagram & Data Flow
 2. Database Schema (DDL + Constraints + Index)
 3. Queue / Event Payload Schema (ถ้ามี)
@@ -133,7 +133,7 @@ Tech Stack ที่ต้องการใช้:
 #### 🔹 [Step 3: แตกตั๋วแบบ Vertical Slice]
 ```text
 ใช้ to-tickets:
-ช่วยแตกตั๋วงานย่อยจาก spec/YYYY-MM-DD_[module]/01_SPEC.md ลงใน tickets/YYYY-MM-DD_[module]/
+ช่วยแตกตั๋วงานย่อยจาก spec/[module]/ ลงใน spec/[module]/04_ticket.md (หรือแยก 04_ticket01.md, 04_ticket02.md... ถ้าตั๋วเยอะ)
 โดยจัดเรียงตั๋วแบบ Vertical Slice (Tracer-bullet) ให้แต่ละตั๋วเทส End-to-End ได้:
 - Ticket 01: Core Ingestion (DB Migration + CRUD API)
 - Ticket 02: Async Pipeline (Queue Setup + Worker + Idempotency Test)
@@ -143,7 +143,7 @@ Tech Stack ที่ต้องการใช้:
 
 #### 🔹 [Step 4: เปิด Session ใหม่ เพื่อเริ่มโค้ด (1 Ticket = 1 แชทใหม่)]
 ```text
-อ่าน AGENTS.md และทำตามตั๋ว: tickets/YYYY-MM-DD_[module]/01_core_ingestion.md
+อ่าน AGENTS.md และทำตามตั๋วใน: spec/[module]/04_ticket.md (หรือ 04_ticket01.md)
 ใช้ skill: tdd
 เขียน Failing Test ก่อนเสมอ แล้วค่อยเขียนโค้ดจนผ่าน
 ```
@@ -151,7 +151,7 @@ Tech Stack ที่ต้องการใช้:
 #### 🔹 [Step 5: ตรวจสอบก่อน Commit]
 ```text
 ใช้ code-review:
-ตรวจโค้ดที่เพิ่งเขียนเทียบกับตั๋ว tickets/.../01_core_ingestion.md และกฎใน AGENTS.md
+ตรวจโค้ดที่เพิ่งเขียนเทียบกับตั๋วใน spec/[module]/04_ticket.md (หรือ 04_ticket01.md) และกฎใน AGENTS.md
 พร้อมเช็ก Security (SQL Injection, IDOR, Unhandled Error)
 ```
 
@@ -160,7 +160,7 @@ Tech Stack ที่ต้องการใช้:
 ### 🟡 กรณี 2: ฟีเจอร์เดิมเปลี่ยน Flow / เปลี่ยน Requirement
 
 ```
-[ Session วางแผน ] ──► อัปเดตไฟล์ spec/... เดิม (In-place) → รัน to-tickets แตกตั๋วชุดใหม่
+[ Session วางแผน ] ──► อัปเดตไฟล์ spec/[module]/ เดิม (In-place) → รัน to-tickets อัปเดต 04_ticket.md
           │
           ▼ 🎯 [ จบ Session / เปิดแชทใหม่ ]
 [ Session โค้ด ]   ──► เปิดแชทใหม่ รัน tdd (แก้ Test เดิมให้ Red → โค้ดจน Green)
@@ -168,7 +168,7 @@ Tech Stack ที่ต้องการใช้:
 
 #### 📋 Prompt Template สำหรับกรณี 2:
 ```text
-อัปเดตไฟล์ spec/YYYY-MM-DD_[module]/01_SPEC.md:
+อัปเดตไฟล์ spec/[module]/01_plan.md:
 
 เรามีการเปลี่ยน Flow การทำงาน:
 - Flow เดิม: [เช่น ส่งอีเมลแบบ Sync ภายใน API Request]
@@ -177,7 +177,7 @@ Tech Stack ที่ต้องการใช้:
 
 สิ่งที่ต้องทำ:
 1. ปรับปรุง Architecture, Schema, และ Sequence ในไฟล์ spec เดิม (ห้ามสร้างไฟล์ใหม่)
-2. รัน to-tickets เพื่อสร้างตั๋วงานย่อยชุดใหม่ลงใน tickets/YYYY-MM-DD_[module]/
+2. รัน to-tickets เพื่ออัปเดตตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md
 ```
 
 ---
@@ -221,7 +221,7 @@ Log / ข้อมูลเพิ่มเติม: [แนบ Error Log หร
 สำรวจโปรเจกต์นี้ก่อน:
 1. อ่านโครงสร้างโปรเจกต์, README, และ AGENTS.md แล้วสรุป Tech Stack + Data Flow สั้นๆ
 2. เราต้องการต่อเติมฟีเจอร์: [เช่น เพิ่มระบบ Export ข้อมูลเป็น Excel แบบ Async]
-3. ช่วยเขียน Mini-Spec 1 หน้าลงใน spec/YYYY-MM-DD_feature/01_SPEC.md และแตกตั๋วด้วย to-tickets
+3. ช่วยเขียน Mini-Spec 1 หน้าลงใน spec/[module]/01_plan.md และแตกตั๋วด้วย to-tickets
 (ห้ามแตะต้องหรือ Refactor โค้ดเดิมของระบบ)
 ```
 
