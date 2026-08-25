@@ -27,9 +27,31 @@
          │
          ▼ (AI)
 6. /code-review ─────────────────────► Dual Review: เช็ค Spec Match + AGENTS.md Standards
-         │
-         ▼ (You)
-7. jj describe -m "feat: ..." ────────► Commit ผ่าน jj ทีละชิ้นงานย่อย
+
+## 🗺️ ภาพรวมใหญ่ของระบบ Skills (The Complete End-to-End Skill Architecture)
+
+ระบบการทำงานทั้งหมดขับเคลื่อนด้วย **Core 10 Skills + Rules/ + JJ VCS** แบ่งออกเป็น 4 Phase หลัก:
+
+```
+[ Phase 1: DISCOVER & PLAN ] ──► ใช้คุยตกผลึกความต้องการก่อนเขียนโค้ด (Session วางแผน)
+  ├── /grill-me            : AI เป็นฝ่ายยิงคำถามไล่ต้อน หา Edge Cases, ข้อจำกัด, Non-functional reqs
+  ├── /to-spec             : สังเคราะห์ผลการสัมภาษณ์ออกมาเป็นไฟล์ Spec ชัดเจน (ตาม convention)
+  └── /to-tickets          : ซอย Spec ใหญ่เป็น Tracer-bullet tickets (Atomic tasks ขนาด 1 Session)
+
+[ Phase 2: BASELINE & RULES ] ──► กำหนดกรอบและสัญญามาตรฐาน (Single Source of Truth)
+  ├── rules/               : กฎเหล็กของแต่ละ Stack (Go / React MVC / Python / DevOps)
+  ├── ARCHITECTURE.md      : แบบแปลนสถาปัตยกรรมและ Data Flow หลัก
+  └── AGENTS.md            : ไฟล์สรุปกฎที่ AI ทุกตัวจะอ่านอัตโนมัติเมื่อเปิดโฟลเดอร์
+
+[ Phase 3: IMPLEMENTATION ] ────► ลงมือเขียนโค้ดจริง (1 Ticket = 1 Session ใหม่ Clean Context)
+  ├── /tdd                 : [หัวใจหลัก] บังคับเขียน Failing Test ก่อนโค้ด (Red → Green Loop)
+  └── Tech Boosters        : AI ดึงความรู้มาเสริมอัตโนมัติ (shadcn, supabase-postgres, vercel-react)
+
+[ Phase 4: VERIFY & REVIEW ] ───► ตรวจสอบคุณภาพ 2 มิติอย่างเข้มงวดก่อน Commit
+  ├── /code-review         : [Reviewer Mode] ตรวจ Spec Match (ตรงโจทย์ไหม) + Standards (ตรงกฎไหม)
+  ├── /diagnosing-bugs     : [เมื่อเจอจุดพัง] สืบหา Root Cause แบบวิทยาศาสตร์ก่อนลงมือแก้
+  ├── /handoff             : [เมื่อจบรอบ/กะ] ย่อ Context ส่งต่องานให้ Session ถัดไป
+  └── jj describe          : บันทึก Commit ประวัติการทำงานเข้า VCS ทีละชิ้นงานย่อย
 ```
 
 ---
