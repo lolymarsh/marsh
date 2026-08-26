@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marsh AI Developer Knowledge Base &amp; Workflow Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            accent: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+            },
+            dark: {
+              bg: '#090D16',
+              surface: '#0F172A',
+              card: '#111827',
+              border: '#1E293B',
+              muted: '#64748B',
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'Sarabun', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- PrismJS for Code Syntax Highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+
+  <style>
+    /* Smooth native scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Modern subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.4);
+    }
+
+    /* 
+      ======================================================
+      ENGINEERED TYPOGRAPHY FOR EFFORTLESS READING (Linear & Vercel Style)
+      ======================================================
+    */
+    .prose-custom {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .dark .prose-custom {
+      color: #CBD5E1; /* Slate 300 - High legibility, zero eye-strain */
+    }
+    html:not(.dark) .prose-custom {
+      color: #334155; /* Slate 700 - Crisp paper-like feel */
+    }
+
+    /* Headings Hierarchy */
+    .prose-custom h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid;
+    }
+    .dark .prose-custom h1 {
+      color: #F8FAFC;
+      border-bottom-color: #1E293B;
+    }
+    html:not(.dark) .prose-custom h1 {
+      color: #0F172A;
+      border-bottom-color: #E2E8F0;
+    }
+
+    .prose-custom h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+      margin-top: 2.75rem; /* Generous breathing room above sections */
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid;
+      scroll-margin-top: 5.5rem;
+    }
+    .dark .prose-custom h2 {
+      color: #F1F5F9;
+      border-bottom-color: #1E293B;
+    }
+    html:not(.dark) .prose-custom h2 {
+      color: #1E293B;
+      border-bottom-color: #E2E8F0;
+    }
+
+    .prose-custom h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.4;
+      margin-top: 2rem;
+      margin-bottom: 0.65rem;
+      scroll-margin-top: 5.5rem;
+    }
+    .dark .prose-custom h3 {
+      color: #E2E8F0;
+    }
+    html:not(.dark) .prose-custom h3 {
+      color: #1E293B;
+    }
+
+    .prose-custom h4 {
+      font-size: 0.975rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+      color: #10B981;
+    }
+
+    /* Paragraph & Lists */
+    .prose-custom p {
+      margin-bottom: 1.25rem;
+    }
+    .prose-custom ul, .prose-custom ol {
+      margin-bottom: 1.35rem;
+      padding-left: 1.4rem;
+    }
+    .prose-custom ul {
+      list-style-type: disc;
+    }
+    .prose-custom ol {
+      list-style-type: decimal;
+    }
+    .prose-custom li {
+      margin-bottom: 0.45rem;
+      line-height: 1.75;
+    }
+    .prose-custom li input[type="checkbox"] {
+      accent-color: #10B981;
+      margin-right: 0.5rem;
+      transform: scale(1.15);
+      cursor: pointer;
+    }
+
+    /* Blockquote */
+    .prose-custom blockquote {
+      border-left: 3px solid #10B981;
+      padding: 0.85rem 1.25rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin: 1.5rem 0;
+      font-style: normal;
+    }
+    .dark .prose-custom blockquote {
+      background: rgba(16, 185, 129, 0.05);
+      color: #94A3B8;
+    }
+    html:not(.dark) .prose-custom blockquote {
+      background: #F0FDF4;
+      color: #166534;
+    }
+
+    /* Responsive Tables */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: 0.75rem;
+      border: 1px solid;
+    }
+    .dark .table-container {
+      border-color: #1E293B;
+      background: #0B101D;
+    }
+    html:not(.dark) .table-container {
+      border-color: #E2E8F0;
+      background: #FFFFFF;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    }
+    .prose-custom table {
+      width: 100%;
+      min-width: 540px;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .prose-custom th {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid;
+      white-space: nowrap;
+    }
+    .dark .prose-custom th {
+      background: #0F172A;
+      color: #94A3B8;
+      border-bottom-color: #1E293B;
+    }
+    html:not(.dark) .prose-custom th {
+      background: #F8FAFC;
+      color: #475569;
+      border-bottom-color: #E2E8F0;
+    }
+    .prose-custom td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .dark .prose-custom td {
+      border-bottom-color: #1E293B;
+    }
+    html:not(.dark) .prose-custom td {
+      border-bottom-color: #F1F5F9;
+    }
+    .prose-custom tr:last-child td {
+      border-bottom: none;
+    }
+    .dark .prose-custom tr:hover td {
+      background: rgba(30, 41, 59, 0.4);
+    }
+    html:not(.dark) .prose-custom tr:hover td {
+      background: #F8FAFC;
+    }
+
+    /* Inline Code */
+    .prose-custom code:not(pre code) {
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.375rem;
+      font-size: 0.85em;
+      font-family: 'JetBrains Mono', monospace;
+      border: 1px solid;
+    }
+    .dark .prose-custom code:not(pre code) {
+      background: #111827;
+      color: #38BDF8;
+      border-color: #1F2937;
+    }
+    html:not(.dark) .prose-custom code:not(pre code) {
+      background: #F1F5F9;
+      color: #0369A1;
+      border-color: #E2E8F0;
+    }
+
+    /* Pre & Code Blocks */
+    .prose-custom pre {
+      position: relative;
+      margin: 1.35rem 0;
+      border-radius: 0.75rem;
+      background: #080D1A !important;
+      border: 1px solid #1E293B;
+      overflow-x: auto;
+      padding: 1.1rem 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.65;
+    }
+    html:not(.dark) .prose-custom pre {
+      border-color: #CBD5E1;
+    }
+
+    .prose-custom hr {
+      border: 0;
+      height: 1px;
+      margin: 2.5rem 0;
+    }
+    .dark .prose-custom hr {
+      background: #1E293B;
+    }
+    html:not(.dark) .prose-custom hr {
+      background: #E2E8F0;
+    }
+
+    /* Minimalist Callout Alerts */
+    .alert-box {
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 0.75rem;
+      border-width: 1px;
+      font-size: 0.875rem;
+    }
+    .dark .alert-note {
+      background: rgba(30, 41, 59, 0.4);
+      border-color: #334155;
+      color: #94A3B8;
+    }
+    html:not(.dark) .alert-note {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      color: #475569;
+    }
+    .dark .alert-tip {
+      background: rgba(16, 185, 129, 0.06);
+      border-color: rgba(16, 185, 129, 0.25);
+      color: #6EE7B7;
+    }
+    html:not(.dark) .alert-tip {
+      background: #F0FDF4;
+      border-color: #86EFAC;
+      color: #166534;
+    }
+    .dark .alert-important {
+      background: rgba(245, 158, 11, 0.06);
+      border-color: rgba(245, 158, 11, 0.25);
+      color: #FCD34D;
+    }
+    html:not(.dark) .alert-important {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
+    }
+    .dark .alert-warning {
+      background: rgba(239, 68, 68, 0.06);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: #FCA5A5;
+    }
+    html:not(.dark) .alert-warning {
+      background: #FEF2F2;
+      border-color: #FECACA;
+      color: #991B1B;
+    }
+
+    /* Toast animation */
+    @keyframes slideInUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .toast-anim {
+      animation: slideInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#FBFBFD] text-slate-800 dark:bg-[#090D16] dark:text-slate-200 min-h-screen font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-150">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-40 w-full border-b border-slate-200 bg-[#FBFBFD]/90 dark:border-slate-800/80 dark:bg-[#090D16]/90 backdrop-blur-md transition-colors">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Hub Name -->
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-btn" class="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60 focus:outline-none" aria-label="Open menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div class="flex items-center gap-2 cursor-pointer select-none" onclick="switchDoc('00_overview')">
+          <div class="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-sm">
+            M
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm text-slate-900 dark:text-white tracking-tight">marsh</span>
+            <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-300/60 dark:border-slate-700">AI Docs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons / Global Tools -->
+      <div class="flex items-center gap-2">
+        <!-- Search Trigger -->
+        <button onclick="openSearchModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-800 shadow-sm dark:bg-slate-900/60 dark:border-slate-800 dark:hover:border-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-xs transition cursor-pointer">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">ค้นหาเอกสาร...</span>
+          <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono rounded bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">⌘K</kbd>
+        </button>
+
+        <!-- Prompt Builder Modal Trigger -->
+        <button onclick="openPromptModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm dark:bg-slate-900/60 dark:hover:bg-slate-800/80 dark:text-slate-200 dark:border-slate-800 text-xs font-medium transition cursor-pointer">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-500"></i>
+          <span class="hidden md:inline">Prompt Generator</span>
+        </button>
+
+        <!-- Architecture Decision Matrix Modal Trigger -->
+        <button onclick="openArchModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm dark:bg-slate-900/60 dark:hover:bg-slate-800/80 dark:text-slate-200 dark:border-slate-800 text-xs font-medium transition cursor-pointer">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"></i>
+          <span class="hidden lg:inline">Stack Matrix</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" onclick="toggleTheme()" class="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60 transition cursor-pointer" title="Toggle Light/Dark">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Balanced 3-Column Layout with Focus on Reading) -->
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex gap-8 lg:gap-10 items-start justify-center">
+      
+      <!-- Backdrop for mobile drawer -->
+      <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 hidden lg:hidden"></div>
+
+      <!-- LEFT SIDEBAR: CLEAN DOCUMENT TREE (260px) -->
+      <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-[#090D16] lg:bg-transparent lg:dark:bg-transparent lg:static lg:block p-6 lg:p-0 border-r border-slate-200 dark:border-slate-800 lg:border-none transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out shrink-0 overflow-y-auto max-h-screen lg:max-h-[calc(100vh-5rem)] lg:sticky lg:top-20">
+        
+        <!-- Mobile close button -->
+        <div class="flex items-center justify-between lg:hidden mb-6 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <span class="font-bold text-sm text-slate-900 dark:text-white">ลำดับเอกสาร (Priority)</span>
+          <button id="close-sidebar" class="p-1 text-slate-400 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer" aria-label="Close menu">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Priority List -->
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 mb-2">
+              📖 ลำดับการอ่าน (Priority)
+            </div>
+            
+            <nav class="space-y-0.5" id="nav-list">
+              <!-- 00 -->
+              <button onclick="switchDoc('00_overview')" id="btn-00_overview" class="doc-nav-btn w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer border border-transparent">
+                <span class="w-5 h-5 rounded flex items-center justify-center font-mono text-[11px] text-slate-400 dark:text-slate-500">00</span>
+                <span class="truncate">Overview &amp; Priority</span>
+              </button>
+
+              <!-- 01 -->
+              <button onclick="switchDoc('01_workflow')" id="btn-01_workflow" class="doc-nav-btn w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer border border-transparent">
+                <span class="w-5 h-5 rounded flex items-center justify-center font-mono text-[11px] text-slate-400 dark:text-slate-500">01</span>
+                <span class="truncate">Main Flow &amp; 5 Scenarios</span>
+              </button>
+
+              <!-- 02 -->
+              <button onclick="switchDoc('02_verify')" id="btn-02_verify" class="doc-nav-btn w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer border border-transparent">
+                <span class="w-5 h-5 rounded flex items-center justify-center font-mono text-[11px] text-slate-400 dark:text-slate-500">02</span>
+                <span class="truncate">Independent Verify &amp; Sec</span>
+              </button>
+
+              <!-- 03 -->
+              <button onclick="switchDoc('03_session')" id="btn-03_session" class="doc-nav-btn w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer border border-transparent">
+                <span class="w-5 h-5 rounded flex items-center justify-center font-mono text-[11px] text-slate-400 dark:text-slate-500">03</span>
+                <span class="truncate">Session Lifecycle</span>
+              </button>
+
+              <!-- 04 -->
+              <button onclick="switchDoc('04_solo')" id="btn-04_solo" class="doc-nav-btn w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer border border-transparent">
+                <span class="w-5 h-5 rounded flex items-center justify-center font-mono text-[11px] text-slate-400 dark:text-slate-500">04</span>
+                <span class="truncate">Solo Dev &amp; Internal Tools</span>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Section: Ecosystem Shortcuts -->
+          <div class="pt-4 border-t border-slate-200 dark:border-slate-800/80">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 mb-2">
+              📦 แหล่งอ้างอิงเสริม
+            </div>
+            <div class="space-y-0.5 text-xs text-slate-500 dark:text-slate-400">
+              <div class="flex items-center justify-between px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/40 transition">
+                <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i> AGENTS.md</span>
+                <span class="text-[10px] font-mono text-slate-400">Single Truth</span>
+              </div>
+              <div class="flex items-center justify-between px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/40 transition">
+                <span class="flex items-center gap-2"><i data-lucide="code" class="w-3.5 h-3.5 text-slate-400"></i> rules/</span>
+                <span class="text-[10px] font-mono text-slate-400">Go/TS/Python</span>
+              </div>
+              <div class="flex items-center justify-between px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/40 transition">
+                <span class="flex items-center gap-2"><i data-lucide="cpu" class="w-3.5 h-3.5 text-slate-400"></i> intercept/</span>
+                <span class="text-[10px] font-mono text-slate-400">RTK Savings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN READING COLUMN (Capped for Optimal Reading Line Length: ~820px) -->
+      <main class="flex-1 min-w-0 max-w-[840px]">
+        
+        <!-- Top Breadcrumb & Metadata Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-1.5">
+            <span class="font-mono text-slate-400">docs</span>
+            <span>/</span>
+            <span id="doc-breadcrumb" class="font-mono text-slate-800 dark:text-slate-200 font-semibold">README.md</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span id="priority-badge" class="font-medium text-slate-500 dark:text-slate-400">
+              Priority 0
+            </span>
+            <span>•</span>
+            <span class="flex items-center gap-1">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+              <span id="read-time">2 นาที</span>
+            </span>
+            <button onclick="copyCurrentDocMarkdown()" class="hover:text-slate-900 dark:hover:text-white flex items-center gap-1 transition cursor-pointer ml-1">
+              <i data-lucide="copy" class="w-3 h-3"></i> Copy MD
+            </button>
+          </div>
+        </div>
+
+        <!-- Rendered Markdown Article -->
+        <article id="doc-content" class="prose-custom">
+          <!-- Dynamic Markdown injected here -->
+        </article>
+
+        <!-- Bottom Pager (Prev / Next Doc) -->
+        <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+          <button id="prev-doc-btn" onclick="prevDoc()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white text-xs transition cursor-pointer">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <div class="text-left">
+              <div class="text-[10px] text-slate-400">ก่อนหน้า</div>
+              <div id="prev-doc-title" class="font-semibold truncate max-w-[160px] sm:max-w-xs">00_overview</div>
+            </div>
+          </button>
+
+          <button id="next-doc-btn" onclick="nextDoc()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white text-xs transition cursor-pointer">
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400">ถัดไป</div>
+              <div id="next-doc-title" class="font-semibold truncate max-w-[160px] sm:max-w-xs">01_AI_WORKFLOW.md</div>
+            </div>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+      </main>
+
+      <!-- RIGHT SIDEBAR: ON THIS PAGE (220px) -->
+      <aside class="hidden xl:block w-56 shrink-0 sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div class="space-y-3">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2">
+            ในหน้านี้ (On this page)
+          </div>
+
+          <nav id="toc-nav" class="space-y-0.5 text-xs text-slate-500 dark:text-slate-400 border-l border-slate-200 dark:border-slate-800 ml-1">
+            <!-- Dynamic TOC items -->
+          </nav>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- SEARCH MODAL (⌘K) -->
+  <div id="search-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-start justify-center pt-20 px-4">
+    <div class="bg-white border border-slate-200 text-slate-900 dark:bg-[#0F172A] dark:border-slate-800 dark:text-white rounded-xl max-w-xl w-full shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2.5">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+        <input id="search-input" type="text" placeholder="พิมพ์ค้นหาคำสั่ง, Prompt, หรือหัวข้อ..." class="w-full bg-transparent border-none text-slate-900 dark:text-white text-xs focus:outline-none placeholder-slate-400" oninput="handleSearch(this.value)">
+        <button onclick="closeSearchModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded transition cursor-pointer" aria-label="Close search">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div id="search-results" class="max-h-96 overflow-y-auto p-2 space-y-1 text-xs">
+        <div class="p-6 text-center text-slate-400">พิมพ์คำเพื่อค้นหาหัวข้อและเนื้อหาใน docs ทั้งหมด...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMPT GENERATOR MODAL -->
+  <div id="prompt-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 text-slate-900 dark:bg-[#0F172A] dark:border-slate-800 dark:text-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
+      <!-- Header -->
+      <div class="p-4 border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-[#0B101D] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-emerald-500"></i>
+          <span class="text-sm font-bold">Prompt Generator (5 สถานการณ์)</span>
+        </div>
+        <button onclick="closePromptModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded transition cursor-pointer" aria-label="Close modal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <!-- Scenario Tabs -->
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">เลือกสถานการณ์:</label>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+            <button onclick="selectPromptScenario(1)" class="pg-tab p-2 rounded-lg border text-center font-medium transition cursor-pointer">
+              1: โปรเจกต์ใหม่
+            </button>
+            <button onclick="selectPromptScenario(2)" class="pg-tab p-2 rounded-lg border text-center font-medium transition cursor-pointer">
+              2: เปลี่ยน Flow
+            </button>
+            <button onclick="selectPromptScenario(3)" class="pg-tab p-2 rounded-lg border text-center font-medium transition cursor-pointer">
+              3: แก้บั๊ก Hotfix
+            </button>
+            <button onclick="selectPromptScenario(4)" class="pg-tab p-2 rounded-lg border text-center font-medium transition cursor-pointer">
+              4: แทรกงานเดิม
+            </button>
+            <button onclick="selectPromptScenario(5)" class="pg-tab p-2 rounded-lg border text-center font-medium transition cursor-pointer">
+              5: ส่งต่องาน
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Inputs -->
+        <div id="prompt-inputs-container" class="space-y-2.5 bg-slate-50 border border-slate-200 text-slate-800 dark:bg-slate-900/60 dark:border-slate-800 dark:text-slate-300 p-3.5 rounded-xl">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Generated Prompt Output -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              Prompt สำเร็จรูป:
+            </label>
+            <span class="text-[10px] text-emerald-500 font-mono">Ready to paste</span>
+          </div>
+          <div class="relative">
+            <textarea id="generated-prompt-text" rows="6" readonly class="w-full bg-[#080D1A] border border-slate-700 rounded-xl p-3 font-mono text-xs text-emerald-300 focus:outline-none leading-relaxed pr-28 select-all"></textarea>
+            <button onclick="copyGeneratedPrompt()" class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow flex items-center gap-1 transition cursor-pointer">
+              <i data-lucide="copy" class="w-3 h-3"></i>
+              <span>ก๊อปปี้</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-3 border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-[#0B101D] flex justify-end">
+        <button onclick="closePromptModal()" class="px-3.5 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 text-xs font-medium transition cursor-pointer">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE MATRIX MODAL -->
+  <div id="arch-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 text-slate-900 dark:bg-[#0F172A] dark:border-slate-800 dark:text-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
+      <div class="p-4 border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-[#0B101D] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4 text-slate-500 dark:text-slate-400"></i>
+          <span class="text-sm font-bold">Architecture Decision Matrix</span>
+        </div>
+        <button onclick="closeArchModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded transition cursor-pointer" aria-label="Close modal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- Tier 1 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/40 flex flex-col justify-between">
+            <div>
+              <div class="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 mb-1">แนะนำ Solo/Internal</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs mb-2">💡 Tier 1: Lean Stack</h4>
+              <ul class="space-y-1 text-[11px] text-slate-600 dark:text-slate-300">
+                <li>• <b>DB:</b> PostgreSQL</li>
+                <li>• <b>Queue:</b> SKIP LOCKED</li>
+                <li>• <b>Realtime:</b> LISTEN/NOTIFY</li>
+                <li>• <b>Cache:</b> UNLOGGED TABLE</li>
+              </ul>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-400">
+              สำหรับ Internal Tools &amp; MVP
+            </div>
+          </div>
+
+          <!-- Tier 2 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/40 flex flex-col justify-between">
+            <div>
+              <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">High Read</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs mb-2">🚀 Tier 2: Hybrid Stack</h4>
+              <ul class="space-y-1 text-[11px] text-slate-600 dark:text-slate-300">
+                <li>• <b>DB:</b> PostgreSQL</li>
+                <li>• <b>Cache:</b> Redis (Cache-aside)</li>
+                <li>• <b>Queue:</b> Redis Streams</li>
+                <li>• <b>Realtime:</b> SSE</li>
+              </ul>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-400">
+              สำหรับ Web App มีโหลดซ้ำๆ
+            </div>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/40 flex flex-col justify-between">
+            <div>
+              <div class="text-[10px] font-bold uppercase text-slate-400 mb-1">High Scale</div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs mb-2">🏢 Tier 3: Distributed</h4>
+              <ul class="space-y-1 text-[11px] text-slate-600 dark:text-slate-300">
+                <li>• <b>DB:</b> Postgres Replicas</li>
+                <li>• <b>Queue:</b> RabbitMQ (DLQ)</li>
+                <li>• <b>Realtime:</b> WebSockets</li>
+                <li>• <b>Cache:</b> Redis Cluster</li>
+              </ul>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-400">
+              สำหรับ Enterprise &amp; Multi-worker
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 dark:bg-[#0B101D] dark:border-slate-800 dark:text-slate-300 text-xs">
+          <div class="font-bold text-slate-900 dark:text-white mb-1">💡 Transactional Job ใน PostgreSQL:</div>
+          <p class="leading-relaxed text-[11px]">
+            การใช้ <code>SKIP LOCKED</code> ช่วยให้บันทึกข้อมูลหลักและใส่คิวใน Transaction เดียวกันได้แบบ 100% ACID ป้องกันปัญหา Dual-write ข้อมูลหลุดได้โดยไม่ต้องเปิด Infra เสริม
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3 border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-[#0B101D] flex justify-end">
+        <button onclick="closeArchModal()" class="px-3.5 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white text-xs font-medium transition cursor-pointer">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-200 pointer-events-none flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-900 text-white shadow-xl text-xs font-medium border border-slate-700">
+    <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span id="toast-msg">คัดลอกข้อความเรียบร้อย!</span>
+  </div>
+
+  <!-- EMBEDDED DOCUMENT DATA -->
+  <script>
+    const DOCS_DATA = {
+  "00_overview": {
+    "id": "00_overview",
+    "filename": "README.md",
+    "title": "00. Overview & Priority Order (เอกสาร AI Workflow)",
+    "breadcrumb": "README.md",
+    "priorityText": "Priority 0 — แผนผังการอ่าน",
+    "readTime": "2 นาที",
+    "markdown": "# docs/ — เอกสาร AI Workflow (เรียงตาม priority ที่ควรอ่าน)\n\n> โฟลเดอร์รวมเอกสารคู่มือการใช้ AI ของ marsh\n> **อ่านตามลำดับเลขหน้าชื่อไฟล์** — ยิ่งเลขน้อย ยิ่งต้องอ่านก่อน\n\n## 📖 ลำดับการอ่าน (Priority Order)\n\n| ลำดับ | ไฟล์ | เนื้อหา | อ่านเมื่อไหร่ |\n|---|---|---|---|\n| **01** | [`01_AI_WORKFLOW.md`](01_AI_WORKFLOW.md) | Flow หลัก (Plan → Spec → Tickets → Code) + **Architecture Decision + Prompt สำเร็จรูป 5 สถานการณ์** | ⭐ **ก่อนเริ่มงานทุกครั้ง** — บังคับอ่าน (One-Stop Guide) |\n| **02** | [`02_ai-verify-guide.md`](02_ai-verify-guide.md) | วิธีแยกผู้เขียน/ผู้ตรวจ — ห้ามให้ AI ตรวจงานตัวเอง + Checklist ความปลอดภัย | หลัง AI ทำเสร็จ — ก่อน commit |\n| **03** | [`03_SESSION_LIFECYCLE.md`](03_SESSION_LIFECYCLE.md) | รายละเอียดเชิงลึกการแบ่ง Session AI: เมื่อไหร่คุยต่อแชทเดิม / เมื่อไหร่ขึ้นแชทใหม่ (1 Ticket = 1 Session) | วางแผนรอบการทำงาน (Context Management) |\n| **04** | [`04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md`](04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md) | End-to-End Workflow สำหรับ Solo Fullstack Dev (Internal Tools, เอกสารส่งมอบ, รายงานผู้บริหาร) | เมื่อรับโจทย์โปรเจกต์ภายในบริษัท |\n\n## 🔁 Flow การใช้เอกสาร (สรุป)\n\n```\n1. เปิด 01_AI_WORKFLOW.md   → ดูกรณีที่ตรงกับงาน (1-5) แล้วก๊อปปี้ Prompt ไปใช้\n2. ดู 03_SESSION_LIFECYCLE.md → เช็ควิธีตัดรอบ Session (Planning แชทเดียว, Implement แยกทีละตั๋ว)\n3. หลัง AI ทำเสร็จ          → อ่าน 02_ai-verify-guide.md → ตรวจแบบแยกผู้ตรวจ + checklist\n```\n\n## 📚 เอกสารอื่นในโปรเจกต์ (อ้างอิงเสริม)\n\n| ตำแหน่ง | เนื้อหา |\n|---|---|\n| `../AGENTS.md` | ภาพรวมโปรเจกต์ marsh (อ่านก่อนทุกอย่าง) |\n| `../rules/` | Coding rules แยกตาม stack (go/typescript/python/devops) — Single Source of Truth สำหรับโค้ด |\n| `../skills/` | รายการ Core Global skills (10 ตัว) |\n| `../intercept/` | เอกสาร RTK — กลไก intercept/บีบอัด output (ดู `intercept/README.md`) |\n\n---\n\n> กฎการตั้งชื่อ: ไฟล์ใน docs/ ขึ้นต้นด้วย `NN_` เสมอ = ลำดับ priority ที่ควรอ่าน\n"
+  },
+  "01_workflow": {
+    "id": "01_workflow",
+    "filename": "01_AI_WORKFLOW.md",
+    "title": "01. AI Coding Workflow สำหรับ SWE (The 5-Phase Lifecycle)",
+    "breadcrumb": "01_AI_WORKFLOW.md",
+    "priorityText": "Priority 1 — ⭐ บังคับอ่านก่อนเริ่มงาน",
+    "readTime": "7 นาที",
+    "markdown": "# 01_AI_WORKFLOW.md — คู่มือ AI Coding Workflow สำหรับ SWE\n\n> **One-Stop Practical Guide**: ลำดับการทำงานร่วมกับ AI ตั้งแต่ตั้งโจทย์ → วาง Architecture → สเปก → เขียนโค้ดแบบ TDD → ตรวจสอบคุณภาพ\n> อ้างอิง Best Practices จาก `aihero.dev/skills` (Matt Pocock) ผสาน System Design & Fullstack SWE จริง\n\n---\n\n## 🗺️ ภาพรวม Workflow หลัก (The 5-Phase Lifecycle)\n\n```\n[ 1. REQUIREMENTS & ARCHITECTURE ] ──► บอก Requirement สั้นๆ → AI Grill ตีกรอบ Architecture\n          │\n          ▼\n[ 2. SPEC & BASELINE ] ──────────────► AI สังเคราะห์เป็น Spec + วาง Data Flow & DB Schema\n          │\n          ▼\n[ 3. VERTICAL TICKETS ] ─────────────► แตกตั๋วงานย่อยแบบ Tracer-bullet (Vertical Slice)\n          │\n          ▼ 🎯 [ จบ Session วางแผน / เปิด Session ใหม่ ]\n[ 4. IMPLEMENTATION (TDD) ] ─────────► 1 Ticket = 1 Session สะอาด (Failing Test → โค้ดจนผ่าน)\n          │\n          ▼\n[ 5. DUAL REVIEW & COMMIT ] ─────────► ตรวจ Spec Match + Coding Standards ก่อน Commit\n```\n\n---\n\n## 🧭 Architecture Decision Guide (กรอบคิด Global ก่อนลงลึก)\n\nก่อนเริ่มลงมือ ให้เช็ก Decision Matrix นี้เพื่อบอกกรอบให้ AI ตั้งแต่แรก ไม่ให้เลือกเครื่องมือผิดขนาด:\n\n```\n[ โจทย์ของระบบ / ขนาดโปรเจกต์ ]\n         │\n         ├─► [ งานเล็ก / Internal Tools / Solo Dev ]\n         │         └── 💡 Tier 1: Postgres-Only Lean Stack\n         │               ├── DB: PostgreSQL (ACID)\n         │               ├── Queue: Postgres SKIP LOCKED (River / pg-boss)\n         │               ├── Realtime: Postgres LISTEN/NOTIFY + SSE\n         │               └── Cache: Postgres UNLOGGED TABLE\n         │\n         ├─► [ งานขนาดกลาง / โหลดอ่านสูง ]\n         │         └── 🚀 Tier 2: Hybrid Stack\n         │               ├── DB: PostgreSQL\n         │               ├── Cache & Queue: Redis (Cache-Aside + Streams)\n         │               └── Realtime: Server-Sent Events (SSE)\n         │\n         └─► [ งาน Enterprise / โหลดหนัก / ซับซ้อน ]\n                   └── 🏢 Tier 3: Distributed Stack\n                         ├── DB: PostgreSQL + Read Replicas\n                         ├── Cache & Lock: Redis Cluster\n                         ├── Queue: RabbitMQ (DLQ + Topic Routing)\n                         └── Realtime: WebSockets (Full-duplex)\n```\n\n### 💡 The \"Postgres-Only\" Lean Stack (สำหรับงานเล็ก / Internal Tools)\nสำหรับงานขนาดเล็กถึงปานกลาง หรือโปรเจกต์ภายในบริษัท **PostgreSQL ตัวเดียวทำได้ครบทุกอย่าง** โดยไม่ต้องเปิด Redis หรือ RabbitMQ ให้เปลือง Infra:\n\n| ความสามารถ | วิธีทำใน PostgreSQL | จุดเด่น / เครื่องมือแนะนำ |\n|---|---|---|\n| **Primary Database** | Relational Tables + JSONB | ACID 100%, Flexible Schema |\n| **Transactional Queue** | `SELECT ... FOR UPDATE SKIP LOCKED` | **Transactional Job**: สร้างข้อมูลและลง Queue ใน DB Transaction เดียวกันได้ทันที ไม่มีปัญหา Dual-write หลุด!<br>*(Go: `riverqueue/river`, Node: `pg-boss` / `graphile-worker`)* |\n| **Realtime / PubSub** | `LISTEN` / `NOTIFY` | ยิง Event เตือน Backend แล้วแปลงเป็น **SSE** ส่งหา Client ได้ทันทีโดยไม่ต้องมี Broker เพิ่ม |\n| **Cache / Temporary** | `UNLOGGED TABLE` + Index | ไม่เขียน Disk WAL ทำให้เร็วใกล้เคียง In-Memory สำหรับ Session หรือ Cache ชั่วคราว |\n\n---\n\n### 📋 Cheatsheet สรุปการเลือกใช้ตามขนาดงาน:\n\n1. **Tier 1: Lean Stack (PostgreSQL เดี่ยวๆ)**:\n   - เหมาะกับ: Internal Tools, MVP, Solo Dev, ผู้ใช้งาน < 1,000 Concurrent\n   - ข้อดี: Infra กล่องเดียวจบ Backup ง่าย ไม่ต้องต่อหลาย Service\n2. **Tier 2: Hybrid Stack (PostgreSQL + Redis + SSE)**:\n   - เหมาะกับ: Production App ทั่วไป, มีการอ่านข้อมูลซ้ำๆ บ่อย (Cache-aside), งาน Realtime ไม่หนัก\n3. **Tier 3: Distributed Stack (PostgreSQL + Redis + RabbitMQ + WebSocket)**:\n   - เหมาะกับ: งาน Enterprise, ต้องการ Dead Letter Queue (DLQ) ซับซ้อน, Multi-worker Routing, หรือแชทโต้ตอบ Realtime 2 ทาง\n\n---\n\n## 🎯 เลือกทำตามสถานการณ์ (5 กรณี) + Prompt สำเร็จรูป\n\n---\n\n### 🟢 กรณี 1: เริ่มโปรเจกต์ใหม่ / ฟีเจอร์ใหม่ (The Main Flow)\n\n#### ลำดับขั้นตอน:\n1. **เปิด Session 1 (Planning)**: คุยในแชทเดียวจนได้ Spec และ Tickets\n2. **2-Phase Grill**: ให้ AI ซักถาม 2 ระดับ:\n   - *Phase A (Global Architecture)*: สรุปเลือก Tools & Boundaries (DB, Queue, Realtime)\n   - *Phase B (Technical Details)*: เจาะลึก Schema, API Contract, Event Payload, FE State\n3. **to-spec**: ให้ AI สรุปเป็นไฟล์ Spec และ ARCHITECTURE.md\n4. **to-tickets**: แตกตั๋วงานย่อยแบบ **Vertical Slice** (ไม่ใช่แยก Backend/Frontend ทั้งหมด)\n5. **Commit Baseline** $\\rightarrow$ **ปิด Session 1**\n6. **เปิด Session 2..N (Implement)**: รันทีละตั๋ว (1 Ticket = 1 Session) ด้วย `tdd` $\\rightarrow$ `code-review`\n\n---\n\n#### 📋 Prompt Templates สำหรับกรณี 1 (ก๊อปปี้ไปปรับใช้):\n\n#### 🔹 [Step 1: สั่ง Grill-me แบบ Global-to-Specific]\n```text\nใช้ grill-me:\nผมต้องการทำระบบ/ฟีเจอร์: [เช่น ระบบจองห้องประชุมพร้อมแจ้งเตือน Realtime]\n\nเป้าหมาย & ปัญหาที่ต้องการแก้:\n- [อธิบายสั้นๆ 2-3 บรรทัด เช่น พนักงานกดจองห้อง มีการแจ้งเตือนหน้าจอทันที และมี worker ส่งอีเมลยืนยัน]\n\nTech Stack ที่ต้องการใช้:\n- Strategy: [เลือก: 1) Postgres-Only Lean Stack หรือ 2) Hybrid Postgres+Redis หรือ 3) Distributed Enterprise]\n- Database: PostgreSQL\n- Cache / In-Memory: [Postgres UNLOGGED / Redis / None]\n- Queue / Worker: [Postgres SKIP LOCKED (River/pg-boss) / Redis Streams / RabbitMQ / None]\n- Realtime: [Postgres LISTEN/NOTIFY + SSE / WebSocket / None]\n- Frontend: [เช่น Next.js App Router + TanStack Query + Tailwind + shadcn]\n- Backend: [เช่น Go REST API หรือ NestJS]\n\nช่วยสัมภาษณ์ผมแบบเจาะลึก 2 ขั้นตอน (ห้ามข้าม):\n1. Global Architecture & Boundaries: จุดไหน Sync/Async, SLA & Concurrency, Failure recovery\n2. Technical Details: Postgres Schema + Indexes, Caching/Keys, Event Payloads + DLQ, Realtime Channels, API DTO, Frontend State Reconciliation\n```\n\n#### 🔹 [Step 2: สังเคราะห์เป็น Spec]\n```text\nใช้ to-spec:\nสรุปข้อตกลงทั้งหมดลงใน spec/plan.md และแยกรายละเอียดย่อยลง spec/[module]/ (เช่น 01_plan.md, 02_api.md, 03_schema.md, 04_frontend.md) โดยระบุ:\n1. Topology Diagram & Data Flow\n2. Database Schema (DDL + Constraints + Index)\n3. Queue / Event Payload Schema (ถ้ามี)\n4. API Contract & Realtime Protocol\n5. Frontend UI/UX Flow & Optimistic Updates\n```\n\n#### 🔹 [Step 3: แตกตั๋วแบบ Vertical Slice]\n```text\nใช้ to-tickets:\nช่วยแตกตั๋วงานย่อยจาก spec/[module]/ ลงใน spec/[module]/04_ticket.md (หรือแยก 04_ticket01.md, 04_ticket02.md... ถ้าตั๋วเยอะ)\nโดยจัดเรียงตั๋วแบบ Vertical Slice (Tracer-bullet) ให้แต่ละตั๋วเทส End-to-End ได้:\n- Ticket 01: Core Ingestion (DB Migration + CRUD API)\n- Ticket 02: Async Pipeline (Queue Setup + Worker + Idempotency Test)\n- Ticket 03: Realtime Propagation (SSE/WS Gateway + Events)\n- Ticket 04: Frontend Client & Live UI (Hook + Optimistic UI)\n```\n\n#### 🔹 [Step 4: เปิด Session ใหม่ เพื่อเริ่มโค้ด (1 Ticket = 1 แชทใหม่)]\n```text\nอ่าน AGENTS.md และทำตามตั๋วใน: spec/[module]/04_ticket.md (หรือ 04_ticket01.md)\nใช้ skill: tdd\nเขียน Failing Test ก่อนเสมอ แล้วค่อยเขียนโค้ดจนผ่าน\n```\n\n#### 🔹 [Step 5: ตรวจสอบก่อน Commit]\n```text\nใช้ code-review:\nตรวจโค้ดที่เพิ่งเขียนเทียบกับตั๋วใน spec/[module]/04_ticket.md (หรือ 04_ticket01.md) และกฎใน AGENTS.md\nพร้อมเช็ก Security (SQL Injection, IDOR, Unhandled Error)\n```\n\n---\n\n### 🟡 กรณี 2: ฟีเจอร์เดิมเปลี่ยน Flow / เปลี่ยน Requirement / เปลี่ยน Tech Stack\n\n```\n[ Session วางแผน ] ──► อัปเดตไฟล์ spec/[module]/ เดิม (In-place) → รัน to-tickets อัปเดต 04_ticket.md\n          │\n          ▼ 🎯 [ จบ Session / เปิดแชทใหม่ ]\n[ Session โค้ด ]   ──► เปิดแชทใหม่ รัน tdd (แก้ Test เดิมให้ Red → โค้ดจน Green)\n```\n\n#### 📋 Prompt Templates สำหรับกรณี 2:\n\n##### 🔹 [2.1 เปลี่ยน Business Flow / Requirements]\n```text\nอัปเดตไฟล์ spec/[module]/01_plan.md:\n\nเรามีการเปลี่ยน Flow การทำงาน:\n- Flow เดิม: [เช่น ส่งอีเมลแบบ Sync ภายใน API Request]\n- Flow ใหม่: [เช่น ยิง Job ลง Redis Queue ให้ Worker ส่งเบื้องหลัง และตอบ 202 Accepted]\n- เหตุผล: [เช่น ลด Response Time ของหน้าบ้านจาก 3s เหลือ < 100ms]\n\nสิ่งที่ต้องทำ:\n1. ปรับปรุง Architecture, Schema, และ Sequence ในไฟล์ spec เดิม (ห้ามสร้างไฟล์ใหม่)\n2. รัน to-tickets เพื่ออัปเดตตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md\n```\n\n##### 🔹 [2.2 เปลี่ยน Tech Stack / Architecture กระทันหัน]\n```text\nอัปเดตไฟล์ spec/[module]/01_plan.md และ spec/[module]/ (In-place):\n\nเรามีการเปลี่ยน Tech Stack กระทันหัน:\n- Stack เดิม: [เช่น Redis Streams สำหรับ Async Queue + Node.js Worker]\n- Stack ใหม่: [เช่น Postgres SKIP LOCKED ผ่าน River Queue + Go Worker เพื่อลด Infra]\n- สาเหตุ & ขอบเขต: [เช่น ปรับตาม Lean Stack เพื่อลด Dependency ภายนอกและรับประกัน Transactional Safety]\n\nสิ่งที่ต้องทำ:\n1. ปรับปรุง Architecture Diagram, Data Flow, Sequence, Config/ENV และ Dependencies ในไฟล์ spec เดิมทั้งหมด\n2. รัน to-tickets เพื่อ Re-generate ตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md (ปรับ Acceptance Criteria และ Tooling ให้เข้ากับ Stack ใหม่)\n```\n\n---\n\n### 🔴 กรณี 3: งานแก้บั๊ก / Hotfix / ปัญหา Production\n\n> ⚠️ **ไม่ต้องทำ Spec** — เปิดแชทใหม่แบบ Clean Context 100% ทันที\n\n```\n[ Error Log / บั๊ก ] ──► /diagnosing-bugs (หา Root Cause) \n                             │\n                             ▼\n                        /tdd (เขียน Failing Test ยืนยันว่าพังจริง)\n                             │\n                             ▼\n                        แก้โค้ดเฉพาะจุดจนผ่าน → /code-review → Commit\n```\n\n#### 📋 Prompt Template สำหรับกรณี 3:\n```text\nมีบั๊กในระบบ: [อธิบายอาการ เช่น พนักงานกดยกเลิกออเดอร์แต่สต็อกไม่คืน หรือ SSE หลุดแล้วไม่ Reconnect]\nLog / ข้อมูลเพิ่มเติม: [แนบ Error Log หรือ Step to reproduce]\n\nคำสั่ง:\n1. ใช้ diagnosing-bugs: วิเคราะห์หาสาเหตุที่แท้จริง (Root Cause) จากโค้ดปัจจุบัน\n2. ใช้ tdd: เขียน Failing Unit/Integration Test เพื่อจำลองบั๊กนี้ให้เห็นชัดเจนก่อน\n3. แก้ไขโค้ดเฉพาะจุดที่ผิดพลาดจน Test ผ่าน (ห้าม Refactor หรือแตะโค้ดส่วนอื่นที่ไม่เกี่ยวข้อง)\n4. ใช้ code-review ตรวจสอบ Side-effects ก่อนจบงาน\n```\n\n---\n\n### 🟣 กรณี 4: เข้าไปแทรกงานกลางโปรเจกต์ / โค้ดคนอื่น\n\n```\n[ สำรวจระบบเดิม ] ──► ให้ AI อ่านโค้ดและสรุป Architecture → เขียน Mini-spec 1 หน้า → แตกตั๋ว\n```\n\n#### 📋 Prompt Template สำหรับกรณี 4:\n```text\nสำรวจโปรเจกต์นี้ก่อน:\n1. อ่านโครงสร้างโปรเจกต์, README, และ AGENTS.md แล้วสรุป Tech Stack + Data Flow สั้นๆ\n2. เราต้องการต่อเติมฟีเจอร์: [เช่น เพิ่มระบบ Export ข้อมูลเป็น Excel แบบ Async]\n3. ช่วยเขียน Mini-Spec 1 หน้าลงใน spec/[module]/01_plan.md และแตกตั๋วด้วย to-tickets\n(ห้ามแตะต้องหรือ Refactor โค้ดเดิมของระบบ)\n```\n\n---\n\n### 🧰 กรณี 5: โปรเจกต์ค้าง / Context ใกล้เต็ม / ส่งต่องานข้ามกะ\n\n```\n[ แชทเดิม ]   ──► รัน /handoff สรุปสถานะลง docs/handoff-[วันที่].md → ปิดแชท\n          │\n          ▼\n[ แชทใหม่ ]   ──► เปิดแชทใหม่ สั่งอ่าน handoff.md และทำ Next Step ต่อทันที\n```\n\n#### 📋 Prompt Template สำหรับกรณี 5:\n* **ตอนจบรอบ (ในแชทเดิม)**:\n  ```text\n  ใช้ handoff:\n  ช่วยสรุปสถานะงานลง docs/handoff-[YYYY-MM-DD].md: สิ่งที่เสร็จแล้ว, สิ่งที่ค้างอยู่, และ Next Step ข้อถัดไป\n  ```\n* **ตอนเริ่มรอบใหม่ (เปิดแชทใหม่)**:\n  ```text\n  อ่าน docs/handoff-[YYYY-MM-DD].md และ AGENTS.md แล้วทำงานในข้อ Next Step ถัดไป ด้วย skill: tdd\n  ```\n\n---\n\n## ⚡ Skills Reference Cheatsheet\n\n| หมวด | Skill | หน้าที่หลัก | คำสั่งเรียกใช้เร็ว |\n|---|---|---|---|\n| **Main Flow** | `grill-me` | สัมภาษณ์ Requirements & Architecture | `ใช้ grill-me: ...` |\n| | `to-spec` | สรุปเป็นเอกสาร Spec & Data Flow | `ใช้ to-spec: ...` |\n| | `to-tickets` | แตกตั๋วงานย่อย Tracer-bullets | `ใช้ to-tickets: ...` |\n| | `tdd` | บังคับเขียน Failing Test ก่อนโค้ด | `ใช้ tdd: ...` |\n| | `code-review` | ตรวจ Spec Match + Coding Standards | `ใช้ code-review: ...` |\n| | `diagnosing-bugs` | สืบหา Root Cause ของบั๊กก่อนแก้ | `ใช้ diagnosing-bugs: ...` |\n| | `handoff` | บันทึกย่อ Context ส่งต่องานข้าม Session | `ใช้ handoff: ...` |\n| **Tech Boosters** | `supabase-postgres-best-practices` | Best practices & Index tuning ของ Postgres | `ใช้ supabase-postgres-best-practices: ...` |\n| | `shadcn` | ติดตั้ง/จัดแต่ง UI Component (React/Next) | `ใช้ shadcn: ...` |\n| | `vercel-react-best-practices` | Optimize Frontend & Next.js Performance | `ใช้ vercel-react-best-practices: ...` |\n\n---\n\n## 🔒 กฎเหล็กประจำตัว (Rules of Thumb)\n\n1. **ห้ามเริ่มโค้ดถ้ายังไม่มีตั๋ว/Spec**: เสียเวลาคุย Architecture 10 นาที ประหยัดเวลาแก้โค้ด 3 วัน\n2. **1 Ticket = 1 Session สะอาดเสมอ**: เมื่อตั๋วเสร็จ $\\rightarrow$ Commit $\\rightarrow$ ปิดแชท $\\rightarrow$ ขึ้นแชทใหม่\n3. **อย่าให้ AI ตรวจงานตัวเองในรอบเดียวกัน**: ให้ใช้ `code-review` หรือตรวจแยก session เพื่อหลีกเลี่ยง Confirmation Bias\n4. **ความปลอดภัยเป็นอันดับหนึ่ง**: ห้าม Hardcode Secrets, ใช้ Parameterized Query เสมอ, และเช็ก RBAC ทุก Endpoint\n"
+  },
+  "02_verify": {
+    "id": "02_verify",
+    "filename": "02_ai-verify-guide.md",
+    "title": "02. AI Independent Verification & Security Guide",
+    "breadcrumb": "02_ai-verify-guide.md",
+    "priorityText": "Priority 2 — ตรวจสอบก่อน Commit",
+    "readTime": "5 นาที",
+    "markdown": "# คู่มือ: ห้ามให้ AI ตรวจงานของตัวเอง (Independent Verification)\n\n> ปัญหา: ถ้าปล่อยให้ AI ที่เขียนโค้ด เป็นคนตรวจโค้ดของตัวเอง → AI มัก \"ยืนยันว่างานถูกต้อง\"\n> ทั้งที่จริงมีบั๊ก (confirmation bias — มองไม่เห็นจุดบอดของตัวเอง เพราะมันเห็น context เดียวกันกับตอนเขียน)\n>\n> วิธีแก้: **แยกคนเขียน กับ คนตรวจ** ให้เป็นคนละ \"บทบาท\" (คนละ agent / คนละ session / หรือคนละ tool)\n>\n> สรุปจาก best practice ของ Claude Code / OpenCode community (2025–2026)\n\n---\n\n## 1. ทำไม \"AI ตรวจงานตัวเอง\" ใช้ไม่ได้\n\n| ปัญหา | คำอธิบาย |\n|---|---|\n| **Confirmation bias** | AI รู้อยู่แล้วว่ามัน \"ตั้งใจ\" จะเขียนอะไร → มองข้ามจุดที่มันคิดผิดตั้งแต่แรก |\n| **Context เดียวกัน** | ผู้เขียนกับผู้ตรวจเห็นไฟล์/ประวัติเดียวกัน → จุดบอดซ้ำกัน (blind spot ซ้ำ) |\n| **ยืนยันแบบผิวเผิน** | AI มักตอบ \"ดูแล้วถูกต้อง\" โดยไม่ได้รัน test จริง หรือไม่ได้ไล่ทุก edge case |\n| **ไม่มีอำนาจโต้แย้ง** | agent ตัวเดียวกันไม่ค่อย \"เถียง\" งานตัวเอง — มันอยากจบงาน |\n\n**หลักการ**: คนตรวจต้องเป็นคนละตัวกับคนเขียน — มี optimization goal ต่างกัน\n(ผู้เขียน = \"ทำให้ครบ/เร็ว\" / ผู้ตรวจ = \"จับผิดให้ได้\")\n\n---\n\n## 2. วิธีแยกผู้เขียนกับผู้ตรวจ (ทำได้ 3 ระดับ)\n\n### ระดับ 1: แยก session / แยก agent ตัว (ง่ายสุด — ใช้ได้ทุกที่)\n\n```\nSession A (ผู้เขียน):\n  \"implement phase 02 ตาม spec/... — เขียน test + โค้ดให้ครบ\"\n\nSession B (ผู้ตรวจ) — เปิด session ใหม่ / spawn agent ใหม่:\n  \"ตรวจงานใน session ก่อนหน้าแบบจับผิด:\n   - ไม่เชื่อว่ามันถูก ให้หา bug ให้เจอ\n   - เทียบกับ spec ทีละข้อ ว่าทำครบจริงมั้ย\n   - รัน test + typecheck + lint เอง\n   - ห้ามแก้โค้ด เอาแค่รายงานปัญหา\"\n```\n\n- ผู้ตรวจ **ห้ามแก้โค้ด** — เอาแค่รายงาน (read-only)\n- สลับ model ก็ได้ (เช่น เขียนด้วย Claude → ตรวจด้วย GPT/DeepSeek) — จุดบอดคนละแบบ\n\n### ระดับ 2: ใช้ sub-agent เฉพาะทาง (ใน Freebuff / Claude Code / OpenCode)\n\nหลายเครื่องมือมี sub-agent/command สำหรับ review โดยเฉพาะ:\n\n| เครื่องมือ | วิธี |\n|---|---|\n| **Freebuff** | สั่ง \"spawn code-reviewer-deepseek-flash ตรวจ diff ที่เพิ่งเขียน\" — agent แยกตัว + model คนละตัว |\n| **Claude Code** | `/review` หรือ spawn subagent \"verifier\" ที่มี `Read` เท่านั้น (ไม่มี write) |\n| **OpenCode** | ตั้ง agent profile แยก: `implementer` (เขียนได้) vs `reviewer` (read-only + มี test tools) |\n| **GitHub/GitLab** | PR review: ให้ AI ตัวอื่น (Copilot review / บอท) review ก่อนคน |\n\n**กุญแจสำคัญ**: ผู้ตรวจต้องมี **permission ต่างจากผู้เขียน** — อย่างน้อยห้าม write ไฟล์โค้ด\nให้เขียนได้แค่ report\n\n### ระดับ 3: ให้ \"เครื่องจักร\" ตรวจ (ไม่ใช่ AI — deterministic)\n\nAI ตรวจแล้วยังไงก็พลาดได้ → ใช้เครื่องมือที่ตรวจได้ 100% แน่นอน:\n\n| ตรวจอะไร | เครื่องมือ | คำสั่ง |\n|---|---|---|\n| Type/Compile | tsc / go build | `npx tsc --noEmit` / `go build ./...` |\n| Lint / Format | eslint / golangci-lint / ruff / prettier | `npx eslint .` / `golangci-lint run` |\n| Test | vitest / jest / pytest / go test | `npm test` / `go test ./...` |\n| Security (secrets) | gitleaks | `gitleaks detect` |\n| Security (code) | semgrep | `semgrep scan --config auto` |\n| Vulnerabilities | trivy | `trivy fs .` |\n| API contract | specmatic / zod validation | ตามโปรเจกต์ |\n\n**หลัก**: AI (ตัวตรวจ) ทำหน้าที่ \"คิดเชิงลึก + มองภาพรวม\" แต่ verification ขั้นสุดท้าย\nต้องเป็นเครื่องมือที่ deterministic — รันแล้วผลตายตัว\n\n---\n\n## 3. Flow ปฏิบัติที่แนะนำ (สำหรับงานประจำ)\n\n```\n┌─ STEP 1: ผู้เขียน (AI session A) ─────────────────────────┐\n│  implement ตาม spec + เขียน test ก่อน (หรือคู่กัน)        │\n│  → รัน test ผ่านเบื้องต้น                                  │\n└──────────────────────────┬───────────────────────────────┘\n                           ▼\n┌─ STEP 2: เกราะเครื่องจักร (deterministic) ────────────────┐\n│  typecheck + lint + test + gitleaks + semgrep            │\n│  ❌ ตก → ส่งกลับผู้เขียนแก้                                │\n└──────────────────────────┬───────────────────────────────┘\n                           ▼\n┌─ STEP 3: ผู้ตรวจ (AI ตัวใหม่ — read-only) ────────────────┐\n│  ตรวจตาม spec ทีละข้อ / หา bug / ไล่ edge case            │\n│  ❌ เจอ → ส่งกลับผู้เขียนแก้ → วน STEP 2-3 ใหม่            │\n└──────────────────────────┬───────────────────────────────┘\n                           ▼\n┌─ STEP 4: คน (คุณ) — review ระดับแนวคิด ──────────────────┐\n│  ตรวจ: spec ตรงมั้ย / architecture ถูกมั้ย / รับผิดชอบ 100%│\n│  (ไม่ต้องไล่ทีละบรรทัด — อ่าน diff ย่อ + สรุปจากผู้ตรวจ)    │\n└──────────────────────────┬───────────────────────────────┘\n                           ▼\n                     commit / merge\n```\n\n---\n\n## 4. Prompt template ผู้ตรวจ (คัดลอกใช้ได้เลย)\n\n### Template A — ตรวจตาม spec (ใช้กับงาน implement)\n\n```\nคุณเป็นผู้ตรวจสอบอิสระ (ไม่ใช่คนเขียนโค้ด) จงทำตัวเป็น \"ฝ่ายจับผิด\":\n\n1. อ่าน spec/02_CUSTOMERS.md แล้วไล่ checklist ทีละข้อว่า implement ครบจริงมั้ย\n2. หา bug ให้เจอ อย่างน้อย 3 จุด: edge case / null / error handling / race\n3. อย่าเชื่อว่าโค้ดถูก ให้พยายามหักล้างให้ได้\n4. รัน: npm test && npx tsc --noEmit && npx eslint .  แล้วรายงานผลจริง\n5. ห้ามแก้ไฟล์โค้ดเด็ดขาด — ส่งรายงานเป็น list:\n   [CRITICAL] / [MAJOR] / [MINOR] + ไฟล์:บรรทัด + เหตุผล + วิธีแก้ที่แนะนำ\n```\n\n### Template B — ตรวจ diff ที่เพิ่งเขียน (งานแก้บั๊ก)\n\n```\nตรวจสอบ diff ล่าสุดแบบไม่เชื่อใจ:\n- git diff ดูว่าอะไรเปลี่ยนบ้าง (ใช้ rtk git diff)\n- แต่ละบรรทัดที่แก้: มันแก้ถูกจุดมั้ย? มีผลข้างเคียงกับที่อื่นมั้ย?\n- มี code path ที่ test ยังไม่ครอบคลุมมั้ย?\n- ห้ามแก้โค้ด — รายงานอย่างเดียว\n```\n\n### Template C — ตรวจความปลอดภัย\n\n```\nตรวจ security ของงานนี้:\n- ไล่หา: injection, auth bypass, hardcoded secret, path traversal, SSRF\n- ตรวจว่า secret ไม่หลุดในโค้ด/commit (รัน gitleaks)\n- ตรวจ permission ที่เกินจำเป็นใน docker/k8s config\n- รายงาน: ระดับความเสี่ยง + ไฟล์:บรรทัด + วิธีแก้\n```\n\n---\n\n## 5. Checklist ท้ายงาน (ใช้คู่กับผู้ตรวจ)\n\n```\n[ ] ผู้เขียน ≠ ผู้ตรวจ (คนละ session/agent/model)\n[ ] ผู้ตรวจเป็น read-only (ไม่มีสิทธิ์แก้โค้ด)\n[ ] typecheck ผ่าน\n[ ] lint ผ่าน (0 error)\n[ ] test ผ่าน (รันเอง ไม่เชื่อปาก AI)\n[ ] gitleaks ไม่พบ secret\n[ ] semgrep ไม่พบ High/Critical\n[ ] ผู้ตรวจไล่ spec ครบทุกข้อ (acceptance criteria)\n[ ] คุณ (คน) อ่าน diff ย่อ + สรุปผู้ตรวจ แล้ว approve เอง\n[ ] โค้ดที่แก้มี test ครอบคลุมจุดที่แก้ (ไม่ใช่แค่ \"รันผ่าน\")\n```\n\n---\n\n## 6. ข้อควรจำ\n\n- **AI เป็นเครื่องมือ ไม่ใช่คนรับผิดชอบ** — คุณรับผิดชอบผลลัพธ์ 100% เสมอ\n- ผู้ตรวจ AI ≠ เชื่อถือได้ 100% — มันคือ \"คนอ่านคนที่ 2\" ที่ช่วยจับจุดบอด\n- เครื่องมือ deterministic (test/lint/typecheck) = เกราะจริง ผู้ตรวจ AI = เกราะเสริม\n- งานเล็กมาก (แก้ typo, เพิ่ม 1 function) ไม่ต้องผ่านขั้นตอนนี้ครบ — ใช้ดุลยพินิจ\n- งานที่แตะ auth / database / concurrency / production config → ต้องตรวจเข้มสุดเสมอ\n\n---\n\n> สร้าง: 2026-08-11 (Freebuff)\n> อ้างอิง: Spec-Driven Development + Adversarial Agent Pattern (Implementor vs Verifier)\n"
+  },
+  "03_session": {
+    "id": "03_session",
+    "filename": "03_SESSION_LIFECYCLE.md",
+    "title": "03. Session Lifecycle & Context Management",
+    "breadcrumb": "03_SESSION_LIFECYCLE.md",
+    "priorityText": "Priority 3 — วางแผนรอบ Context",
+    "readTime": "4 นาที",
+    "markdown": "# 03_SESSION_LIFECYCLE.md — แผนการแบ่ง Session AI ในทางปฏิบัติ\n\n> คู่มือการบริหารจัดการ AI Context & Session: เมื่อไหร่ควรคุยต่อในแชทเดิม เมื่อไหร่ต้องขึ้นแชทใหม่ เพื่อคุณภาพโค้ดสูงสุดและประหยัด Token\n\n---\n\n## 💡 กฎเหล็กของ Session Management\n\n> **\"1 Session ไม่ควรยาวเกิน 1 Phase หรือ 1 Ticket ใหญ่\"**\n> **\"ห้ามใช้ Session เดียวตั้งแต่คิดไอเดียจนเขียนโค้ดเสร็จทั้งโปรเจกต์\"**\n\n### ทำไมต้องแบ่ง Session?\n1. **Context Window Degradation**: ยิ่งบทสนทนายาวเกิน 30-50 ข้อความ AI จะเริ่มหลงลืมกฎใน `AGENTS.md` และสร้างโค้ดที่มี Hallucination สูงขึ้น\n2. **Context Pollution (มลพิษทางบริบท)**: การคุยเรื่อง Requirement/Discussion ค้างไว้ในแชท จะทำให้ AI สับสนกับตอนเขียนโค้ดจริง\n3. **Token & Cost Efficiency**: ประหยัด Token มหาศาล ไม่ต้องเสียเวลาส่งประวัติแชทเก่าๆ วนกลับไปทุกคำสั่ง\n\n---\n\n## 🗺️ ภาพรวม Session Lifecycle (Idea → Ship)\n\n```\n[🟢 Session 1: Planning & Setup (คุยต่อในแชทเดิมได้ตลอดช่วงนี้)]\n  ไอเดีย / โจทย์ใหม่\n       │\n       ▼\n  1. /grill-me (AI ซักถาม Requirement & Edge cases)\n       │\n       ▼\n  2. /to-spec (AI สรุปเป็นไฟล์ Spec ชัดเจน)\n       │\n       ▼\n  3. /to-tickets (AI แตกเป็นตั๋วงานย่อย Tracer tasks)\n       │\n       ▼\n  4. สร้าง ARCHITECTURE.md + AGENTS.md\n       │\n       ▼\n  5. jj describe -m \"spec: initial plan, architecture and tickets\"\n       │\n═══════╪══════════════════════════════════════════════════════════\n       ▼ 🎯 จบ Session 1 — [ ปิดแชทเดิม / เปิดแชทใหม่ ]\n═══════╪══════════════════════════════════════════════════════════\n       │\n[🔵 Session 2: Implement Ticket 01 (Clean Context 100%)]\n  1. เปิดแชทใหม่: \"ทำ Ticket 01 ตาม AGENTS.md ด้วย skill tdd\"\n       │\n       ▼\n  2. /tdd (เขียน failing test ก่อน → โค้ดจนผ่าน)\n       │\n       ▼\n  3. /code-review (ตรวจเทียบ Spec Match + Standards)\n       │\n       ▼\n  4. jj describe -m \"feat(module): ticket 01 description\"\n       │\n═══════╪══════════════════════════════════════════════════════════\n       ▼ 🎯 จบ Session 2 — [ ปิดแชทเดิม / เปิดแชทใหม่ ]\n═══════╪══════════════════════════════════════════════════════════\n       │\n[🔵 Session 3..N: Implement Ticket 02..N (เปิดแชทใหม่ทุกตั๋ว)]\n  ทำซ้ำลูปเดียวกับ Session 2 จนครบทุก Tickets\n```\n\n---\n\n## 📋 รายละเอียดแต่ละ Session\n\n---\n\n### 🟢 Session 1: Phase วางแผนและสร้างมาตรฐาน (Planning & Baseline)\n\n* **เป้าหมาย**: เปลี่ยนไอเดียดิบให้กลายเป็น **Spec + Architecture Rules + Tickets** ที่พร้อมนำไปเขียนโค้ด\n* **ลักษณะ Session**: **คุยต่อเนื่องในแชทเดิมได้ตลอดทั้ง Phase นี้** เพราะต้องต่อยอดบทสนทนา\n\n| ลำดับคำสั่ง | Action / Skill | ผลลัพธ์ที่ต้องได้ |\n|---|---|---|\n| 1 | `/grill-me` | AI ซักถามโจทย์, Non-functional requirements, Edge cases |\n| 2 | `/to-spec` | ไฟล์ Spec เช่น `spec/2026-xx-xx_module/01_SPEC.md` |\n| 3 | `/to-tickets` | รายการตั๋วงานย่อย เช่น `tickets/TICKET-01.md`, `02.md` |\n| 4 | Manual Review | ตรวจสอบไฟล์ `ARCHITECTURE.md` และดึง `rules/` ลง `AGENTS.md` |\n| 5 | **VCS Commit** | `jj describe -m \"spec: initial plan, architecture and tickets\"` |\n\n> 🛑 **จุดตัด (Boundary)**: หลัง Commit Baseline เสร็จ **ให้ปิดแชทนี้ทันที** อย่าเขียนโค้ดต่อในแชทนี้\n\n---\n\n### 🔵 Session 2..N: Phase เขียนโค้ดรายตั๋ว (1 Ticket = 1 Session)\n\n* **เป้าหมาย**: สร้างโค้ดที่ถูกต้องตามแบบแผนของ 1 Ticket ย่อย\n* **ลักษณะ Session**: **เปิดแชทใหม่ทุกครั้ง (Clean Context 100%)**\n\n#### Template คำสั่งเปิดแชทใหม่:\n```markdown\nอ่าน AGENTS.md และทำตาม ticket: tickets/TICKET-01.md\nใช้ skill: tdd\nเขียน unit test ก่อน แล้วค่อย implement โค้ด\n```\n\n| ลำดับขั้นตอน | Action / Skill | รายละเอียด |\n|---|---|---|\n| 1 | **Implement with TDD** | AI สร้าง Failing Test $\\rightarrow$ เขียนโค้ดจน Test ผ่าน (Red-Green-Refactor) |\n| 2 | `/code-review` | ให้ AI สวมบทบาท Reviewer ตรวจเทียบ 2 มิติ: <br>1) ตรงกับ Ticket ไหม? <br>2) ตรงตาม `AGENTS.md` & `rules/` ไหม? |\n| 3 | **Verify & Commit** | รัน linter/test จริง $\\rightarrow$ `jj describe -m \"feat(module): ticket description\"` |\n\n> 🛑 **จุดตัด (Boundary)**: เมื่อ Ticket นั้นเสร็จและ commit แล้ว **ให้ปิดแชททันที** เพื่อเริ่ม Ticket ถัดไปในแชทใหม่\n\n---\n\n### 🔴 Session พิเศษ: การแก้บั๊ก / ปรับปรุงงานด่วน (Bug Fix & Hotfix)\n\n* **เป้าหมาย**: แก้ปัญหาโดยไม่สร้าง Side Effect และไม่แตะต้องโค้ดส่วนอื่น\n* **ลักษณะ Session**: **เปิดแชทแยกต่างหากทันที**\n\n| ขั้นตอน | Skill / Action | แนวทางปฏิบัติ |\n|---|---|---|\n| 1. วิเคราะห์ | `/diagnosing-bugs` | บังคับให้ AI ตั้งสมมติฐานและหา Root Cause จาก log/trace ก่อน ห้ามเดาสุ่ม |\n| 2. ดักบั๊ก | `/tdd` | เขียน Regression Test ที่ยืนยันว่าเกิดบั๊กจริง (Test ต้อง Fail ก่อนแก้) |\n| 3. แก้ไข | Prompt: \"แก้เฉพาะ X ห้าม refactor ส่วนอื่น\" | แก้ไขโค้ดจน failing test ผ่าน |\n| 4. ตรวจสอบ | `/code-review` + Regression Scan | ตรวจสอบว่าไม่กระทบฟังก์ชันเดิม |\n| 5. Commit | `jj describe -m \"fix(module): bug summary\"` | จบงาน ปิดแชท |\n\n---\n\n## 🧰 เครื่องมือช่วยเชื่อมต่อข้าม Session (`/handoff`)\n\nเมื่อไหร่ที่ต้องใช้ `/handoff`:\n1. ทำงานติดพันแต่ **Context ใกล้เต็ม** หรือ AI เริ่มตอบช้า/วน\n2. **หมดเวลาทำงาน** ต้องพักกะ แล้วจะกลับมาทำต่อวันพรุ่งนี้\n3. ต้องส่งต่องานให้อีก Agent / Model อื่นทำต่อ\n\n### วิธีใช้งาน `/handoff`:\n1. พิมพ์สั่ง: `/handoff` ในแชทปัจจุบัน\n2. AI จะสรุปสถานะปัจจุบัน:\n   - สิ่งที่ทำเสร็จแล้ว\n   - สิ่งที่ค้างอยู่ (Next Steps)\n   - ปัญหาหรือข้อตกลงที่ค้นพบ\n3. เซฟเป็นไฟล์ `handoff.md`\n4. เมื่อเปิด Session ใหม่ ให้เริ่มด้วย:\n   ```markdown\n   อ่าน handoff.md และ AGENTS.md แล้วทำต่องานในข้อถัดไป\n   ```\n"
+  },
+  "04_solo": {
+    "id": "04_solo",
+    "filename": "04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md",
+    "title": "04. Solo Fullstack Dev Guide สำหรับ Internal Tools",
+    "breadcrumb": "04_SOLO_DEV_INTERNAL_TOOLS_WORKFLOW.md",
+    "priorityText": "Priority 4 — โปรเจกต์ภายในบริษัท",
+    "readTime": "6 นาที",
+    "markdown": "# คู่มือการทำงานแบบ Solo Fullstack Dev สำหรับ Internal Tools & Business Workflow\n> ย้ายงานใหม่ / รับโจทย์โปรเจกต์ภายใน (Internal Tools) ให้ทำงานแบบครบวงจร (End-to-End Solo Developer) ด้วยพลังของ AI\n\n---\n\n## 🎯 คำตอบสำหรับคำถามหลักของคุณ: \"โจทย์มาลอยๆ เราคิด Business Logic เองแล้วใช้ AI ช่วยยังไง?\"\n\n> **คำตอบคือ: ถูกต้อง 100%!** \n> ในการพัฒนาโปรเจกต์ภายใน (Internal Product) หัวหน้าหรือฝ่ายบริหารมักจะให้มาแค่ **\"ชื่อโปรเจกต์ + ปัญหาคร่าวๆ (Concept)\"** เช่น *\"อยากได้ระบบเบิกของออฟฟิศ/สต๊อกที่ไม่งง\"* หรือ *\"อยากให้ฝ่ายบัญชีดึงรายงานเร็วขึ้น\"*\n>\n> ฐานะ Solo Fullstack Developer คุณคือ **Product Owner + System Architect + Developer ในคนเดียว**:\n> 1. คุณจะใช้ `/grill-me` ให้ AI สวมบทบาทเป็นที่ปรึกษา ช่วยตั้งคำถามเพื่อ **แกะความต้องการ (Requirements), วิเคราะห์ Business Flow เดิม vs ใหม่ และดักจับ Edge Cases**\n> 2. คุณใส่ Business Context / Logic และความเป็นไปได้ในทางปฏิบัติของบริษัทตอบกลับไป\n> 3. AI สรุปเป็น **Spec & Acceptance Criteria**\n> 4. คุณเริ่มพัฒนาด้วย AI (Test-First / Phase-by-phase) และจัดทำ **เอกสารส่งมอบ (Handover / User Manual)** ให้พนักงานและหัวหน้า\n\n---\n\n## 🗺️ End-to-End Lifecycle ของ Solo Dev (6 ขั้นตอน ตั้งแต่วันแรกจนส่งมอบ)\n\n```\n[ 1. รับ Concept ลอยๆ ]\n         │\n         ▼\n[ 2. AI Brainstorm & Grill ] ──► ใช้ /grill-me ถามเจาะลึก Business Flow, Role, Data, Edge Cases\n         │\n         ▼\n[ 3. Design & Baseline ]    ──► ทำ Spec, DB Schema, RBAC, Wireframe/Prototype\n         │\n         ▼\n[ 4. Build & TDD Loop ]     ──► ซอยตั๋วงานย่อย (/to-tickets) → Implement ทีละ Ticket (/tdd)\n         │\n         ▼\n[ 5. Delivery & Handover ]  ──► จัดทำ Quick User Guide, Deployment Guide, Demo Walkthrough\n         │\n         ▼\n[ 6. Track & Report ]       ──► รายงานความคืบหน้า + สรุปผลลัพธ์ (Time Saved / Impact) ให้หัวหน้า\n```\n\n---\n\n## 📌 ขั้นตอนที่ 1: การเปลี่ยนไอเดียลอยๆ ให้กลายเป็น Business Logic ด้วย `/grill-me`\n\nเมื่อหัวหน้าสั่งงานมาสั้นๆ เช่น *\"อยากได้ระบบจัดการสินทรัพย์และเบิกอุปกรณ์ไอทีภายใน\"*\n\n### 📋 Prompt เริ่มต้นสำหรับ Grill-me:\n```text\nใช้ grill-me:\nหัวหน้าให้โจทย์ทำโปรเจกต์ภายใน: \"ระบบจัดการและเบิกอุปกรณ์ IT ภายในบริษัท\"\nเป้าหมาย: ช่วยให้พนักงานเบิกของง่ายขึ้น และแอดมิน IT เช็กสต๊อกไม่ตกหล่น\n\nช่วยซักถาม/สัมภาษณ์ผมแบบเจาะลึกทีละข้อ โดยครอบคลุม:\n1. User Roles & Permissions (ใครมีสิทธิ์ทำอะไรบ้าง: พนักงาน, หัวหน้าอนุมัติ, IT Admin)\n2. Workflow ปัจจุบัน (Pain point เดิม) vs Workflow ใหม่ที่ควรจะเป็น\n3. สถานะและ Life cycle ของข้อมูล (Draft -> Pending -> Approved -> Delivered -> Returned)\n4. ข้อมูลและ Fields ที่จำเป็นต้องเก็บ\n5. Edge Cases (ของหมดสต๊อก, ยกเลิกคำขอ, คืนของชำรุด)\n6. ความปลอดภัย (ใครเห็นข้อมูลใครได้บ้าง)\n```\n\n---\n\n## 📌 ขั้นตอนที่ 2: สังเคราะห์เป็น Spec & Baseline Architecture\n\nหลังตอบคำถามจนตกผลึก ให้ AI รัน `/to-spec` เพื่อสร้างเอกสารโครงสร้างระบบ\n\n### สิ่งที่ระบบ Internal Tools ควรมีเป็น Baseline เสมอ:\n1. **Authentication & RBAC (Role-Based Access Control)**:\n   - Login ผ่าน Google Workspace SSO / Microsoft Office 365 หรือ Internal Email\n   - Role ชัดเจน (เช่น `EMPLOYEE`, `MANAGER`, `ADMIN`, `SUPER_ADMIN`)\n2. **Audit Logging & Activity History**:\n   - ระบบภายใน \"ต้องรู้ว่าใครแก้/ลบ/อนุมัติอะไร เมื่อไหร่\" (CreatedBy, UpdatedBy, Timestamp, Action Log)\n3. **Data Export & Search / Filter**:\n   - พนักงานชอบ Excel/CSV เสมอ ต้องออกแบบให้ Export ได้ง่าย และค้นหาเร็ว\n4. **Simple Status & Notifications**:\n   - แจ้งเตือนผ่าน LINE Notify, Discord Webhook, หรือ Email เมื่อมีการร้องขอ/อนุมัติ\n\n---\n\n## 📌 ขั้นตอนที่ 3: ซอยตั๋วและเขียนโค้ด (The Implementation Flow)\n\nทำงานแบบ 1 Ticket = 1 Session ตามหลัก **The Main Flow**:\n\n1. รัน `/to-tickets` เพื่อแตก Spec ออกเป็นไฟล์ย่อยใน `tickets/`\n2. เปิด Session ใหม่ รันคำสั่ง:\n   ```text\n   อ่าน AGENTS.md และทำตาม ticket: tickets/.../01_auth_rbac.md ด้วย skill: tdd\n   ```\n3. รัน `/code-review` เพื่อตรวจเช็คความถูกต้องและ Security (ป้องกัน Hardcoded Secret / Data Leak)\n4. บันทึกประวัติด้วย `jj describe -m \"feat(asset): implement requisition approval flow\"`\n\n---\n\n## 📦 ขั้นตอนที่ 4: เอกสารที่ต้องทำส่งมอบ (Handover Deliverables Checklist)\n\nสำหรับงาน Internal Tools เอกสารไม่ต้องยาวเป็นร้อยหน้า แต่ต้อง **\"ตรงจุด ใช้งานเป็น ดูแลต่อได้\"**:\n\n### Checklist 4 เอกสารสำคัญที่ต้องมี:\n\n| เอกสาร | กลุ่มเป้าหมาย | ความยาว | สิ่งที่ต้องมี |\n|---|---|---|---|\n| **1. Quick User Manual** (คู่มือพนักงาน) | พนักงานทั่วไป / End Users | 1-2 หน้า (มีภาพ/GIF ประกอบ) | - วิธี Login ครั้งแรก<br>- ขั้นตอนทำรายการหลัก 3-4 ขั้นตอน<br>- FAQ ปัญหาที่พบบ่อย |\n| **2. Admin & Ops Guide** (คู่มือแอดมิน) | IT Admin / ฝ่ายที่ดูแลระบบ | 2-3 หน้า | - วิธีเพิ่ม/ลดสิทธิ์ผู้ใช้<br>- วิธีจัดการ Master Data / แก้ไขข้อมูลที่ผิด<br>- วิธี Export ข้อมูลและดู Audit Log |\n| **3. Technical & Runbook** (คู่มือทางเทคนิค) | คุณในอนาคต / Dev คนถัดไป | 1-2 หน้า (`README.md`) | - Architecture Diagram & Tech Stack<br>- วิธี Run Local & Environment Variables (`.env.example`)<br>- Database Migration & Backup/Restore Procedure<br>- Production Deployment Steps (Docker / CI/CD) |\n| **4. Release Notes & Demo** | หัวหน้า / ผู้บริหาร | 1 หน้าสรุป + Demo 5 นาที | - สรุปฟีเจอร์ที่ปล่อยในเวอร์ชันนี้<br>- สิ่งที่ระบบจะช่วยประหยัดเวลา/ลดข้อผิดพลาด |\n\n---\n\n## 📊 ขั้นตอนที่ 5: การติดตามงาน (Task Tracking) และการรายงานหัวหน้า (Management Reporting)\n\n### 1. วิธี Track งานและ Feature เมื่อทำหลายโปรเจกต์คู่ขนาน:\nใช้ระบบไฟล์ Markdown หรือ Tool ง่ายๆ (เช่น Linear, Notion, GitHub Projects) โดยแบ่ง Track:\n- `spec/[module]/` (เช่น `spec/core/01_plan.md`, `02_api.md`, `03_schema.md`, `04_ticket.md` หรือแยก `04_ticket01.md`, `04_ticket02.md` ถ้างานเยอะ) รวมจบในโฟลเดอร์เดียว ไม่ต้องสร้างโฟลเดอร์ tickets แยก\n\n### 2. เทมเพลตรายงานหัวหน้า / ผู้บริหาร (Weekly / Milestone Update):\n\n```markdown\n### 🚀 สรุปความคืบหน้าโปรเจกต์: [ชื่อโปรเจกต์ เช่น Internal Asset Management]\n**สถานะภาพรวม**: 🟢 On Track (พร้อมส่งมอบตามกำหนด)\n\n#### 1. สิ่งที่ทำเสร็จแล้วในสัปดาห์นี้ (Completed):\n- [x] ระบบ Login และกำหนดสิทธิ์ (Employee vs IT Admin)\n- [x] หน้าฟอร์มเบิกอุปกรณ์พร้อมระบบเช็กสต๊อก Realtime\n- [x] ระบบแจ้งเตือนการอนุมัติผ่าน LINE Notify\n\n#### 2. สิ่งที่กำลังจะทำในสัปดาห์ถัดไป (Next Steps):\n- [ ] ระบบ Export รายงานประจำเดือนเป็น Excel\n- [ ] ทดสอบระบบร่วมกับฝ่าย IT และจัดทำ Quick User Manual\n\n#### 3. สรุปผลลัพธ์และคุณค่าที่พนักงานจะได้รับ (Impact/Value):\n- ช่วยลดเวลาในการเดินเอกสารเบิกของจากเดิม 2 วัน เหลือไม่เกิน 15 นาที\n- ป้องกันปัญหาของในสต๊อกหายหรือไม่ตรงกับยอดจริง 100%\n\n#### 4. ข้อติดขัด / สิ่งที่ต้องการความช่วยเหลือ (Blockers/Help Needed):\n- ต้องการรายชื่อ Master Data หมวดหมู่อุปกรณ์จากพี่แอดมิน IT ภายในวันพุธนี้ครับ\n```\n\n---\n\n## 💡 สรุป Mindset สำหรับ Solo Fullstack Dev\n1. **เริ่มจากปัญหาผู้ใช้ (Pain Point) เสมอ**: อย่าเพิ่งคิดเรื่องโค้ด ให้ใช้ `/grill-me` คุยปัญหาให้ชัดก่อน\n2. **ระบบภายในเน้น Speed to Value & Reliability**: UI คลีน ใช้งานง่าย ทำงานเสร็จไว ดีกว่า UI หรูหราแต่ใช้ยาก\n3. **ใช้ AI เป็น Fullstack Pair-programmer**: ตั้งแต่ช่วยตั้งคำถาม (Grill) -> ออกแบบ DB -> เขียน Test -> ตรวจสอบ Security -> ช่วยร่างคู่มือ User Manual\n4. **สื่อสารผลลัพธ์เป็นภาษาธุรกิจ**: เวลาคุยกับหัวหน้า ให้พูดถึง \"ลดเวลาทำงานกี่นาที / ข้อมูลถูกต้องขึ้นแค่ไหน\" แทนที่จะพูดแค่เรื่องภาษาหรือเฟรมเวิร์กที่ใช้\n"
+  }
+};
+
+    let currentDocId = "00_overview";
+    const docKeys = ["00_overview", "01_workflow", "02_verify", "03_session", "04_solo"];
+
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+      highlight: function(code, lang) {
+        if (Prism.languages[lang]) {
+          return Prism.highlight(code, Prism.languages[lang], lang);
+        }
+        return code;
+      }
+    });
+
+    // Render Document Function
+    function renderDoc(docId) {
+      currentDocId = docId;
+      const data = DOCS_DATA[docId];
+      if (!data) return;
+
+      // Update Nav Button Styles (Minimalist active highlight)
+      document.querySelectorAll('.doc-nav-btn').forEach(btn => {
+        btn.classList.remove(
+          'bg-slate-200/80', 'text-slate-900', 'font-semibold',
+          'dark:bg-slate-800/80', 'dark:text-white'
+        );
+        btn.classList.add(
+          'text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100',
+          'dark:text-slate-400', 'dark:hover:text-slate-200', 'dark:hover:bg-slate-800/40'
+        );
+      });
+      const activeBtn = document.getElementById(`btn-${docId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove(
+          'text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100',
+          'dark:text-slate-400', 'dark:hover:text-slate-200', 'dark:hover:bg-slate-800/40'
+        );
+        activeBtn.classList.add(
+          'bg-slate-200/80', 'text-slate-900', 'font-semibold',
+          'dark:bg-slate-800/80', 'dark:text-white'
+        );
+      }
+
+      // Update Header & Breadcrumb
+      document.getElementById('doc-breadcrumb').textContent = data.filename;
+      document.getElementById('read-time').textContent = data.readTime;
+      document.getElementById('priority-badge').textContent = data.priorityText;
+
+      // Parse Markdown
+      const htmlContent = marked.parse(data.markdown);
+      const contentEl = document.getElementById('doc-content');
+      contentEl.innerHTML = htmlContent;
+
+      // Wrap any unwrapped tables in responsive container
+      contentEl.querySelectorAll('table').forEach(table => {
+        if (!table.parentElement.classList.contains('table-container')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'table-container';
+          table.parentNode.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        }
+      });
+
+      // Post-process Code Blocks with Copy Buttons
+      contentEl.querySelectorAll('pre').forEach(pre => {
+        const code = pre.querySelector('code');
+        const codeText = code ? code.innerText : pre.innerText;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative group my-4';
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'absolute top-2.5 right-2.5 px-2 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-mono border border-slate-700 opacity-0 group-hover:opacity-100 transition flex items-center gap-1 shadow cursor-pointer';
+        copyBtn.innerHTML = `<i data-lucide="copy" class="w-3 h-3"></i> Copy`;
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(codeText);
+          showToast('คัดลอกโค้ดสำเร็จ!');
+          copyBtn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Copied!`;
+          setTimeout(() => {
+            copyBtn.innerHTML = `<i data-lucide="copy" class="w-3 h-3"></i> Copy`;
+            lucide.createIcons();
+          }, 2000);
+        };
+        wrapper.appendChild(copyBtn);
+      });
+
+      // Transform Alerts (> [!NOTE] etc.)
+      enhanceAlerts(contentEl);
+
+      // Build Table of Contents
+      buildTOC(contentEl);
+
+      // Update Prev / Next buttons
+      updatePager();
+
+      // Refresh icons & Prism highlight
+      lucide.createIcons();
+      Prism.highlightAll();
+
+      // Scroll to top of window
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function enhanceAlerts(container) {
+      container.querySelectorAll('blockquote').forEach(bq => {
+        const text = bq.innerHTML;
+        if (text.includes('[!NOTE]')) {
+          bq.className = 'alert-box alert-note';
+          bq.innerHTML = text.replace('[!NOTE]', '<b>NOTE:</b>');
+        } else if (text.includes('[!TIP]')) {
+          bq.className = 'alert-box alert-tip';
+          bq.innerHTML = text.replace('[!TIP]', '<b>TIP:</b>');
+        } else if (text.includes('[!IMPORTANT]')) {
+          bq.className = 'alert-box alert-important';
+          bq.innerHTML = text.replace('[!IMPORTANT]', '<b>IMPORTANT:</b>');
+        } else if (text.includes('[!WARNING]') || text.includes('[!CAUTION]')) {
+          bq.className = 'alert-box alert-warning';
+          bq.innerHTML = text.replace(/\[!(WARNING|CAUTION)\]/, '<b>WARNING:</b>');
+        }
+      });
+    }
+
+    function buildTOC(container) {
+      const tocNav = document.getElementById('toc-nav');
+      tocNav.innerHTML = '';
+
+      const headings = container.querySelectorAll('h2, h3');
+      if (headings.length === 0) {
+        tocNav.innerHTML = '<span class="text-slate-400 text-xs italic px-3">ไม่มีหัวข้อย่อย</span>';
+        return;
+      }
+
+      headings.forEach((h, i) => {
+        const rawText = h.textContent.trim();
+        const cleanSlug = 'section-' + i + '-' + rawText.toLowerCase().replace(/[^\w\u0E00-\u0E7F]+/g, '-').replace(/^-+|-+$/g, '');
+        h.id = cleanSlug;
+        h.classList.add('scroll-mt-20');
+
+        const link = document.createElement('a');
+        link.href = '#' + cleanSlug;
+        link.className = `block py-1 px-3 hover:text-slate-900 dark:hover:text-white transition truncate cursor-pointer ${
+          h.tagName === 'H3' ? 'pl-5 text-slate-400 dark:text-slate-500 text-[11px]' : 'font-medium'
+        }`;
+        link.textContent = rawText.replace(/^[0-9.]+\s*/, '');
+        link.onclick = (e) => {
+          e.preventDefault();
+          const targetOffset = h.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: targetOffset, behavior: 'smooth' });
+        };
+        tocNav.appendChild(link);
+      });
+    }
+
+    function updatePager() {
+      const currentIndex = docKeys.indexOf(currentDocId);
+      const prevBtn = document.getElementById('prev-doc-btn');
+      const nextBtn = document.getElementById('next-doc-btn');
+
+      if (currentIndex > 0) {
+        const prevKey = docKeys[currentIndex - 1];
+        document.getElementById('prev-doc-title').textContent = DOCS_DATA[prevKey].filename;
+        prevBtn.style.visibility = 'visible';
+      } else {
+        prevBtn.style.visibility = 'hidden';
+      }
+
+      if (currentIndex < docKeys.length - 1) {
+        const nextKey = docKeys[currentIndex + 1];
+        document.getElementById('next-doc-title').textContent = DOCS_DATA[nextKey].filename;
+        nextBtn.style.visibility = 'visible';
+      } else {
+        nextBtn.style.visibility = 'hidden';
+      }
+    }
+
+    function prevDoc() {
+      const currentIndex = docKeys.indexOf(currentDocId);
+      if (currentIndex > 0) {
+        renderDoc(docKeys[currentIndex - 1]);
+      }
+    }
+
+    function nextDoc() {
+      const currentIndex = docKeys.indexOf(currentDocId);
+      if (currentIndex < docKeys.length - 1) {
+        renderDoc(docKeys[currentIndex + 1]);
+      }
+    }
+
+    function switchDoc(docId) {
+      renderDoc(docId);
+      closeMobileSidebar();
+    }
+
+    function copyCurrentDocMarkdown() {
+      const data = DOCS_DATA[currentDocId];
+      if (data) {
+        navigator.clipboard.writeText(data.markdown);
+        showToast(`คัดลอก ${data.filename} เรียบร้อย!`);
+      }
+    }
+
+    // Toast Function
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toast-msg');
+      msgEl.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100', 'toast-anim');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100', 'toast-anim');
+      }, 2000);
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+      lucide.createIcons();
+    }
+
+    // Search Logic
+    function openSearchModal() {
+      document.getElementById('search-modal').classList.remove('hidden');
+      const input = document.getElementById('search-input');
+      input.value = '';
+      input.focus();
+      handleSearch('');
+    }
+    function closeSearchModal() {
+      document.getElementById('search-modal').classList.add('hidden');
+    }
+    function handleSearch(query) {
+      const q = query.trim().toLowerCase();
+      const resultsContainer = document.getElementById('search-results');
+      if (!q) {
+        resultsContainer.innerHTML = '<div class="p-6 text-center text-slate-400">พิมพ์คำเพื่อค้นหาหัวข้อและเนื้อหาใน docs ทั้งหมด...</div>';
+        return;
+      }
+
+      let matches = [];
+      docKeys.forEach(key => {
+        const doc = DOCS_DATA[key];
+        const lines = doc.markdown.split('\n');
+        lines.forEach((line, idx) => {
+          if (line.toLowerCase().includes(q)) {
+            matches.push({
+              docId: key,
+              docName: doc.filename,
+              docTitle: doc.title,
+              lineText: line.replace(/[#*`>]/g, '').trim(),
+              lineNumber: idx + 1
+            });
+          }
+        });
+      });
+
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = `<div class="p-6 text-center text-slate-400">ไม่พบคำว่า "<span class="text-slate-900 dark:text-white font-semibold">${query}</span>" ในเอกสาร</div>`;
+        return;
+      }
+
+      resultsContainer.innerHTML = matches.slice(0, 15).map(m => `
+        <div onclick="selectSearchResult('${m.docId}')" class="p-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="font-semibold text-slate-900 dark:text-white">${m.docName}</span>
+            <span class="text-[10px] text-slate-400 font-mono">Line ${m.lineNumber}</span>
+          </div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">${m.lineText}</div>
+        </div>
+      `).join('');
+    }
+    function selectSearchResult(docId) {
+      closeSearchModal();
+      renderDoc(docId);
+    }
+
+    // Keyboard shortcuts (⌘K to search)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearchModal();
+      }
+    });
+
+    // Prompt Generator Logic
+    let currentPromptScenario = 1;
+    function openPromptModal() {
+      document.getElementById('prompt-modal').classList.remove('hidden');
+      selectPromptScenario(1);
+    }
+    function closePromptModal() {
+      document.getElementById('prompt-modal').classList.add('hidden');
+    }
+
+    function selectPromptScenario(num) {
+      currentPromptScenario = num;
+      document.querySelectorAll('.pg-tab').forEach((tab, i) => {
+        if (i + 1 === num) {
+          tab.className = 'pg-tab p-2 rounded-lg border border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-950 font-semibold text-center transition cursor-pointer';
+        } else {
+          tab.className = 'pg-tab p-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 font-medium text-center dark:hover:border-slate-700 transition cursor-pointer';
+        }
+      });
+      renderPromptInputs(num);
+    }
+
+    function renderPromptInputs(num) {
+      const container = document.getElementById('prompt-inputs-container');
+      if (num === 1) {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ชื่อระบบ / ฟีเจอร์:</label>
+            <input id="p1-name" type="text" value="ระบบจัดการและเบิกอุปกรณ์ไอที พร้อมแจ้งเตือน Realtime" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">เป้าหมาย &amp; ปัญหาที่ต้องการแก้:</label>
+            <textarea id="p1-goal" rows="2" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">พนักงานกดเบิกอุปกรณ์ เช็กสต๊อกคงเหลือ และมี worker ส่งแจ้งเตือนผ่าน LINE Notify และ Email</textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Architecture Strategy:</label>
+              <select id="p1-strategy" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" onchange="updateGeneratedPrompt()">
+                <option value="Postgres-Only Lean Stack (SKIP LOCKED Queue + LISTEN/NOTIFY SSE)">Postgres-Only Lean Stack (แนะนำ)</option>
+                <option value="Hybrid Stack (Postgres + Redis Streams + SSE)">Hybrid Stack (Postgres + Redis)</option>
+                <option value="Distributed Enterprise (Postgres + Redis + RabbitMQ + WebSocket)">Distributed Enterprise</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Frontend &amp; Backend Stack:</label>
+              <input id="p1-stack" type="text" value="Next.js App Router + shadcn + TanStack Query / Go REST API" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+            </div>
+          </div>
+        `;
+      } else if (num === 2) {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ไฟล์ Spec ที่ต้องการอัปเดต:</label>
+            <input id="p2-spec" type="text" value="spec/2026-08-25_orders/01_SPEC.md" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ประเภทการเปลี่ยนแปลง:</label>
+            <select id="p2-type" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" onchange="handleP2TypeChange()">
+              <option value="flow">1) เปลี่ยน Business Flow / Logic</option>
+              <option value="tech">2) เปลี่ยน Tech Stack / Architecture กระทันหัน</option>
+            </select>
+          </div>
+          <div id="p2-flow-fields" class="space-y-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Flow เดิม:</label>
+                <input id="p2-old" type="text" value="ส่งอีเมลยืนยันคำสั่งซื้อแบบ Sync ใน API Handler" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Flow ใหม่:</label>
+                <input id="p2-new" type="text" value="ส่ง Job ลง Redis Queue ให้ worker ทำเบื้องหลัง และตอบ 202 Accepted" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">เหตุผลในการเปลี่ยน:</label>
+              <input id="p2-reason" type="text" value="ลด Response Time ของหน้าบ้านจาก 3s เหลือ < 100ms" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+            </div>
+          </div>
+          <div id="p2-tech-fields" class="space-y-2.5 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Stack / Tools เดิม:</label>
+                <input id="p2-tech-old" type="text" value="Redis Streams สำหรับ Async Queue + Node.js Worker" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Stack / Tools ใหม่:</label>
+                <input id="p2-tech-new" type="text" value="Postgres SKIP LOCKED ผ่าน River Queue + Go Worker" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">สาเหตุ &amp; ขอบเขต:</label>
+              <input id="p2-tech-reason" type="text" value="ปรับตาม Lean Stack เพื่อลด Infra ภายนอก และรับประกัน Transactional Safety" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+            </div>
+          </div>
+        `;
+      } else if (num === 3) {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">อาการของบั๊ก:</label>
+            <input id="p3-bug" type="text" value="พนักงานกดยกเลิกคำสั่งซื้อแต่ยอดสต็อกสินค้าไม่คืน หรือ SSE หลุดแล้วไม่ Reconnect" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Error Log / ข้อมูลจำลอง:</label>
+            <textarea id="p3-log" rows="2" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">POST /api/v1/orders/123/cancel -> 500 Internal Server Error: pq: relation "inventory_tx" locked by another transaction</textarea>
+          </div>
+        `;
+      } else if (num === 4) {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ฟีเจอร์ที่ต้องการต่อเติม:</label>
+            <input id="p4-feat" type="text" value="เพิ่มระบบ Export ประวัติการทำรายการเป็นไฟล์ Excel (.xlsx) แบบ Background Job" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Path บันทึก Mini-Spec:</label>
+            <input id="p4-path" type="text" value="spec/2026-08-25_export_excel/01_SPEC.md" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+        `;
+      } else if (num === 5) {
+        container.innerHTML = `
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ไฟล์บันทึกสถานะ Handoff:</label>
+            <input id="p5-file" type="text" value="docs/handoff-2026-08-25.md" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">ผู้รับช่วงต่อ:</label>
+            <input id="p5-next" type="text" value="Session ใหม่ (Clean Context) เริ่มงานตั๋วถัดไปทันที" class="w-full bg-white border border-slate-300 text-slate-900 dark:bg-[#0B101D] dark:border-slate-700 dark:text-white rounded-lg p-2 text-xs focus:outline-none focus:border-emerald-500" oninput="updateGeneratedPrompt()">
+          </div>
+        `;
+      }
+      updateGeneratedPrompt();
+    }
+
+    function handleP2TypeChange() {
+      const type = document.getElementById('p2-type')?.value;
+      const flowBox = document.getElementById('p2-flow-fields');
+      const techBox = document.getElementById('p2-tech-fields');
+      if (type === 'tech') {
+        flowBox?.classList.add('hidden');
+        techBox?.classList.remove('hidden');
+      } else {
+        flowBox?.classList.remove('hidden');
+        techBox?.classList.add('hidden');
+      }
+      updateGeneratedPrompt();
+    }
+
+    function updateGeneratedPrompt() {
+      const output = document.getElementById('generated-prompt-text');
+      if (currentPromptScenario === 1) {
+        const name = document.getElementById('p1-name')?.value || '';
+        const goal = document.getElementById('p1-goal')?.value || '';
+        const strat = document.getElementById('p1-strategy')?.value || '';
+        const stack = document.getElementById('p1-stack')?.value || '';
+        output.value = `ใช้ grill-me:
+ผมต้องการทำระบบ/ฟีเจอร์: ${name}
+
+เป้าหมาย & ปัญหาที่ต้องการแก้:
+- ${goal}
+
+Tech Stack ที่ต้องการใช้:
+- Strategy: ${strat}
+- Database: PostgreSQL
+- Stack: ${stack}
+
+ช่วยสัมภาษณ์ผมแบบเจาะลึก 2 ขั้นตอน (ห้ามข้าม):
+1. Global Architecture & Boundaries: จุดไหน Sync/Async, SLA & Concurrency, Failure recovery
+2. Technical Details: Postgres Schema + Indexes, Caching/Keys, Event Payloads + DLQ, Realtime Channels, API DTO, Frontend State Reconciliation`;
+      } else if (currentPromptScenario === 2) {
+        const spec = document.getElementById('p2-spec')?.value || '';
+        const type = document.getElementById('p2-type')?.value || 'flow';
+        if (type === 'tech') {
+          const oldTech = document.getElementById('p2-tech-old')?.value || '';
+          const newTech = document.getElementById('p2-tech-new')?.value || '';
+          const reason = document.getElementById('p2-tech-reason')?.value || '';
+          output.value = `อัปเดตไฟล์ ${spec} และ spec/[module]/ (In-place):
+
+เรามีการเปลี่ยน Tech Stack กระทันหัน:
+- Stack เดิม: ${oldTech}
+- Stack ใหม่: ${newTech}
+- สาเหตุ & ขอบเขต: ${reason}
+
+สิ่งที่ต้องทำ:
+1. ปรับปรุง Architecture Diagram, Data Flow, Sequence, Config/ENV และ Dependencies ในไฟล์ spec เดิมทั้งหมด
+2. รัน to-tickets เพื่อ Re-generate ตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md (ปรับ Acceptance Criteria และ Tooling ให้เข้ากับ Stack ใหม่)`;
+        } else {
+          const oldFlow = document.getElementById('p2-old')?.value || '';
+          const newFlow = document.getElementById('p2-new')?.value || '';
+          const reason = document.getElementById('p2-reason')?.value || '';
+          output.value = `อัปเดตไฟล์ ${spec}:
+
+เรามีการเปลี่ยน Flow การทำงาน:
+- Flow เดิม: ${oldFlow}
+- Flow ใหม่: ${newFlow}
+- เหตุผล: ${reason}
+
+สิ่งที่ต้องทำ:
+1. ปรับปรุง Architecture, Schema, และ Sequence ในไฟล์ spec เดิม (ห้ามสร้างไฟล์ใหม่)
+2. รัน to-tickets เพื่ออัปเดตตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md`;
+        }
+      } else if (currentPromptScenario === 3) {
+        const bug = document.getElementById('p3-bug')?.value || '';
+        const log = document.getElementById('p3-log')?.value || '';
+        output.value = `มีบั๊กในระบบ: ${bug}
+Log / ข้อมูลเพิ่มเติม: ${log}
+
+คำสั่ง:
+1. ใช้ diagnosing-bugs: วิเคราะห์หาสาเหตุที่แท้จริง (Root Cause) จากโค้ดปัจจุบัน
+2. ใช้ tdd: เขียน Failing Unit/Integration Test เพื่อจำลองบั๊กนี้ให้เห็นชัดเจนก่อน
+3. แก้ไขโค้ดเฉพาะจุดที่ผิดพลาดจน Test ผ่าน (ห้าม Refactor หรือแตะโค้ดส่วนอื่นที่ไม่เกี่ยวข้อง)
+4. ใช้ code-review ตรวจสอบ Side-effects ก่อนจบงาน`;
+      } else if (currentPromptScenario === 4) {
+        const feat = document.getElementById('p4-feat')?.value || '';
+        const path = document.getElementById('p4-path')?.value || '';
+        output.value = `สำรวจโปรเจกต์นี้ก่อน:
+1. อ่านโครงสร้างโปรเจกต์, README, และ AGENTS.md แล้วสรุป Tech Stack + Data Flow สั้นๆ
+2. เราต้องการต่อเติมฟีเจอร์: ${feat}
+3. ช่วยเขียน Mini-Spec 1 หน้าลงใน ${path} และแตกตั๋วด้วย to-tickets
+(ห้ามแตะต้องหรือ Refactor โค้ดเดิมของระบบ)`;
+      } else if (currentPromptScenario === 5) {
+        const file = document.getElementById('p5-file')?.value || '';
+        output.value = `[คำสั่งสำหรับแชทเดิม]:
+ใช้ handoff:
+ช่วยสรุปสถานะงานลง ${file}: สิ่งที่เสร็จแล้ว, สิ่งที่ค้างอยู่, และ Next Step ข้อถัดไป
+
+[คำสั่งสำหรับเปิดแชทใหม่]:
+อ่าน ${file} และ AGENTS.md แล้วทำงานในข้อ Next Step ถัดไป ด้วย skill: tdd`;
+      }
+    }
+
+    function copyGeneratedPrompt() {
+      const text = document.getElementById('generated-prompt-text').value;
+      navigator.clipboard.writeText(text);
+      showToast('คัดลอก Prompt สำเร็จ!');
+    }
+
+    // Architecture modal functions
+    function openArchModal() {
+      document.getElementById('arch-modal').classList.remove('hidden');
+    }
+    function closeArchModal() {
+      document.getElementById('arch-modal').classList.add('hidden');
+    }
+
+    // Mobile sidebar toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeSidebarBtn = document.getElementById('close-sidebar');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    const sidebar = document.getElementById('sidebar');
+
+    function openMobileSidebar() {
+      sidebar.classList.remove('-translate-x-full');
+      sidebarBackdrop.classList.remove('hidden');
+    }
+    function closeMobileSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      sidebarBackdrop.classList.add('hidden');
+    }
+
+    mobileMenuBtn?.addEventListener('click', openMobileSidebar);
+    closeSidebarBtn?.addEventListener('click', closeMobileSidebar);
+    sidebarBackdrop?.addEventListener('click', closeMobileSidebar);
+
+    // Init page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check saved theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+      renderDoc('00_overview');
+    });
+  </script>
+</body>
+</html>

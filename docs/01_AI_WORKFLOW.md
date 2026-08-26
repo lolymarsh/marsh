@@ -157,7 +157,7 @@ Tech Stack ที่ต้องการใช้:
 
 ---
 
-### 🟡 กรณี 2: ฟีเจอร์เดิมเปลี่ยน Flow / เปลี่ยน Requirement
+### 🟡 กรณี 2: ฟีเจอร์เดิมเปลี่ยน Flow / เปลี่ยน Requirement / เปลี่ยน Tech Stack
 
 ```
 [ Session วางแผน ] ──► อัปเดตไฟล์ spec/[module]/ เดิม (In-place) → รัน to-tickets อัปเดต 04_ticket.md
@@ -166,7 +166,9 @@ Tech Stack ที่ต้องการใช้:
 [ Session โค้ด ]   ──► เปิดแชทใหม่ รัน tdd (แก้ Test เดิมให้ Red → โค้ดจน Green)
 ```
 
-#### 📋 Prompt Template สำหรับกรณี 2:
+#### 📋 Prompt Templates สำหรับกรณี 2:
+
+##### 🔹 [2.1 เปลี่ยน Business Flow / Requirements]
 ```text
 อัปเดตไฟล์ spec/[module]/01_plan.md:
 
@@ -178,6 +180,20 @@ Tech Stack ที่ต้องการใช้:
 สิ่งที่ต้องทำ:
 1. ปรับปรุง Architecture, Schema, และ Sequence ในไฟล์ spec เดิม (ห้ามสร้างไฟล์ใหม่)
 2. รัน to-tickets เพื่ออัปเดตตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md
+```
+
+##### 🔹 [2.2 เปลี่ยน Tech Stack / Architecture กระทันหัน]
+```text
+อัปเดตไฟล์ spec/[module]/01_plan.md และ spec/[module]/ (In-place):
+
+เรามีการเปลี่ยน Tech Stack กระทันหัน:
+- Stack เดิม: [เช่น Redis Streams สำหรับ Async Queue + Node.js Worker]
+- Stack ใหม่: [เช่น Postgres SKIP LOCKED ผ่าน River Queue + Go Worker เพื่อลด Infra]
+- สาเหตุ & ขอบเขต: [เช่น ปรับตาม Lean Stack เพื่อลด Dependency ภายนอกและรับประกัน Transactional Safety]
+
+สิ่งที่ต้องทำ:
+1. ปรับปรุง Architecture Diagram, Data Flow, Sequence, Config/ENV และ Dependencies ในไฟล์ spec เดิมทั้งหมด
+2. รัน to-tickets เพื่อ Re-generate ตั๋วงานย่อยชุดใหม่ลงใน spec/[module]/04_ticket.md (ปรับ Acceptance Criteria และ Tooling ให้เข้ากับ Stack ใหม่)
 ```
 
 ---
